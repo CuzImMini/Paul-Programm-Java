@@ -19,7 +19,7 @@
     <!--Basis-Jar für IgelStift und Zeichenmethoden-->
     <dependency>
         <groupId>de.gaesdonck</groupId>
-        <artifactId>Basisbibliothek</artifactId>
+        <artifactId>basis</artifactId>
         <version>1.0</version>
         <scope>system</scope>
         <systemPath>${project.basedir}/repo/de/gaesdonck/basis.jar</systemPath>
@@ -31,25 +31,6 @@
     <build>
         <plugins>
 
-            <!--nötiger Code um Jar ausführbar zu machen-->
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>de.paulcornelissen.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>18</source>
-                    <target>18</target>
-                </configuration>
-            </plugin>
 
             <!--nötiger Code um Basisbibliothek in Jar zu integrieren-->
             <plugin>
@@ -63,21 +44,16 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <mainClass>de.paulcornelissen.Main</mainClass>
+                                </transformer>
+                            </transformers>
                             <artifactSet>
                                 <includes>
-                                    <include>de.gaesdonck:Basisbibliothek</include>
+                                    <include>de.gaesdonck:basis</include>
                                 </includes>
                             </artifactSet>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
                         </configuration>
                     </execution>
                 </executions>

@@ -2,8 +2,6 @@ package de.paulcornelissen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -13,9 +11,10 @@ class Gui {
     static Instance fenster1;
 
     public Gui() {
+        this.mainframe();
     }
 
-    public static void mainframe() {
+    public void mainframe() {
 
         //Erstellung Mainframe
         JFrame frame = new JFrame("Mein UI");
@@ -74,7 +73,6 @@ class Gui {
 
     public static void controlFrame(Instance instance, String name) {
 
-        //Erstellung ControlFrame
         JFrame instanceControl = new JFrame("Zeichen-Controller " + name);
 
         //Beende Prozess, wenn Fenster geschlossen wird
