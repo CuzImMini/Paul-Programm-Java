@@ -19,7 +19,7 @@ public class Instance {
 
     }
 
-    public void close(Instance instance) {
+    public void closeInstance(Instance instance) {
         instance.fenster.setzeSichtbar(false);
 
     }

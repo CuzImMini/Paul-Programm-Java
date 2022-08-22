@@ -100,7 +100,7 @@ public class Pencil extends IgelStift {
     }
 
 
-    public void zeichner(String object, int x, int y, int rotation) {
+    public void drawingCrawler(String object, int x, int y, int rotation) {
 
         if (object.equals("Baum")) {
             this.zeichneBaum(x, y, rotation);

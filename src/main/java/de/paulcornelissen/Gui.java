@@ -81,7 +81,7 @@ class Gui {
             @Override
             public void windowClosing(WindowEvent e) {
             instanceControl.dispose();
-            instance.close(instance);
+            instance.closeInstance(instance);
             }
         });
 
@@ -119,7 +119,7 @@ class Gui {
 
             if (result == JOptionPane.OK_OPTION) {
 
-                instance.pencil.zeichner(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()));
+                instance.pencil.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()));
             }
 
         });
