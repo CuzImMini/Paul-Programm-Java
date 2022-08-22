@@ -10,7 +10,7 @@ public class Main {
         //Testcode für manuelle Erstellung von Instanzen
         //
         //Instance instanceVariableX = new Instance("Name", 500,500,true);
-        //instanceVariable.pencil.zeichneHaus(150,150,0);
+        //instanceVariableX.pencil.zeichneStern(150,150,0);
 
 
     }

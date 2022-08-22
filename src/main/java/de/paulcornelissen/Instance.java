@@ -24,5 +24,16 @@ public class Instance {
 
     }
 
+    public void createPencil() {
+        pencil = new Pencil();
+    }
+
+    public boolean checkPencil() {
+        if (pencil == null) {
+            return false;
+        };
+        return true;
+    }
+
 
 }

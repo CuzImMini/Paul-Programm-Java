@@ -37,6 +37,7 @@ public class Pencil extends IgelStift {
         this.dreheUm(225);
         this.bewegeUm(75);
         this.hoch();
+        this.bewegeBis(0,0);
 
     }
 
@@ -71,6 +72,7 @@ public class Pencil extends IgelStift {
         this.dreheUm(270);
         this.bewegeUm(50);
         this.hoch();
+        this.bewegeBis(0,0);
 
     }
 
@@ -96,6 +98,46 @@ public class Pencil extends IgelStift {
         this.dreheUm(90);
         this.bewegeUm(106);
         this.hoch();
+        this.bewegeBis(0,0);
+
+    }
+
+    public void zeichneStern(int x, int y, int rotation) {
+        this.bewegeBis(x, y);
+        this.dreheBis(rotation);
+        this.runter();
+
+        for (int i = 0; i < 4; i++) {
+            this.dreheUm(315);
+            this.bewegeUm(50);
+            this.dreheUm(135);
+            this.bewegeUm(50);
+        }
+        this.dreheUm(270);
+        this.hoch();
+        this.bewegeUm(10);
+        this.runter();
+        this.dreheUm(90);
+
+        this.dreheUm(315);
+        this.bewegeUm(60);
+        this.dreheUm(135);
+        this.bewegeUm(65);
+        this.dreheUm(315);
+        this.bewegeUm(60);
+        this.dreheUm(135);
+        this.bewegeUm(60);
+        this.dreheUm(315);
+        this.bewegeUm(65);
+        this.dreheUm(135);
+        this.bewegeUm(65);
+        this.dreheUm(315);
+        this.bewegeUm(60);
+        this.dreheUm(135);
+        this.bewegeUm(60);
+        this.hoch();
+        this.bewegeBis(0,0);
+
 
     }
 
@@ -109,6 +151,11 @@ public class Pencil extends IgelStift {
 
         if (object.equals("Buchstabe")) {
             this.zeichneBuchstabe(x, y, rotation);
+            return;
+        }
+
+        if (object.equals("Stern")) {
+            this.zeichneStern(x, y, rotation);
             return;
         }
 

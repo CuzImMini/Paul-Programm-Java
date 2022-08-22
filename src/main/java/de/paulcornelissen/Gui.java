@@ -89,15 +89,19 @@ class Gui {
         instanceControl.setSize(300, 125);
 
         //Setze String-Array
-        String[] objekte = {"Baum", "Haus", "Buchstabe"};
+        String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
 
         //Erstellung Knöpfe
         JButton drawButton = new JButton("zeichnen");
         JButton deleteAll = new JButton("Alles löschen");
+        JButton createPencil = new JButton("Stift erzeugen");
         JComboBox comboBox = new JComboBox(objekte);
 
         //Erstellung Zeichenknopf
         drawButton.addActionListener(e -> {
+
+            if (instance.checkPencil()) {
+
             String malObjekt = comboBox.getSelectedItem().toString();
 
             //Koordinaten-Dialog
@@ -119,10 +123,18 @@ class Gui {
 
             if (result == JOptionPane.OK_OPTION) {
 
+                if (rotationCord.getText().equals("")) {
+                    rotationCord.setText("0");
+                }
                 instance.pencil.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()));
-            }
-
+                return;
+            }}
+            JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
         });
+        //Erstelle Stift-Summoner
+        createPencil.addActionListener(e -> {
+            instance.createPencil();
+                });
 
         //Erstelle Zurücksetzen
         deleteAll.addActionListener(e -> {
@@ -135,6 +147,7 @@ class Gui {
         instanceControl.getContentPane().add(drawButton);
         instanceControl.getContentPane().add(comboBox);
         instanceControl.getContentPane().add(deleteAll);
+        instanceControl.getContentPane().add(createPencil);
 
         instanceControl.setLocationRelativeTo(null);
         instanceControl.setVisible(true);
