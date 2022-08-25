@@ -31,7 +31,8 @@ public class Instance {
     public boolean checkPencil() {
         if (pencil == null) {
             return false;
-        };
+        }
+        ;
         return true;
     }
 

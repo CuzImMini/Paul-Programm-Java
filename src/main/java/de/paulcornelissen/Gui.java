@@ -1,19 +1,24 @@
 package de.paulcornelissen;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.Box;
+import javax.swing.JOptionPane;
+import javax.swing.JCheckBox;
+import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
 class Gui {
 
-    static Instance fenster1;
-
     public Gui() {
         this.mainframe();
     }
-
     public void mainframe() {
 
         //Erstellung Mainframe
@@ -70,7 +75,6 @@ class Gui {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
     public static void controlFrame(Instance instance, String name) {
 
         JFrame instanceControl = new JFrame("Zeichen-Controller " + name);
@@ -80,13 +84,13 @@ class Gui {
         instanceControl.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-            instanceControl.dispose();
-            instance.closeInstance(instance);
+                instanceControl.dispose();
+                instance.closeInstance(instance);
             }
         });
 
         //Setze Fensterattribute
-        instanceControl.setSize(300, 125);
+        instanceControl.setSize(300, 150);
 
         //Setze String-Array
         String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
@@ -95,6 +99,7 @@ class Gui {
         JButton drawButton = new JButton("zeichnen");
         JButton deleteAll = new JButton("Alles löschen");
         JButton createPencil = new JButton("Stift erzeugen");
+        JButton setBackground = new JButton("Hintergrundfarbe setzen");
         JComboBox comboBox = new JComboBox(objekte);
 
         //Erstellung Zeichenknopf
@@ -102,44 +107,104 @@ class Gui {
 
             if (instance.checkPencil()) {
 
-            String malObjekt = comboBox.getSelectedItem().toString();
+                String malObjekt = comboBox.getSelectedItem().toString();
 
-            //Koordinaten-Dialog
-            JTextField xCord = new JTextField(5);
-            JTextField yCord = new JTextField(5);
-            JTextField rotationCord = new JTextField(5);
+                //Dialog
+                JTextField xCord = new JTextField(5);
+                JTextField yCord = new JTextField(5);
+                JTextField rotationCord = new JTextField(5);
 
-            JPanel myPanel = new JPanel();
-            myPanel.add(new JLabel("x:"));
-            myPanel.add(xCord);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("y:"));
-            myPanel.add(yCord);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("rotation:"));
-            myPanel.add(rotationCord);
+                //Setze String-Array
+                String[] color = {"Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
 
-            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Koordinaten und Rotation wählen.", JOptionPane.OK_CANCEL_OPTION);
 
-            if (result == JOptionPane.OK_OPTION) {
+                JPanel myPanel = new JPanel();
+                JComboBox colorBox = new JComboBox(color);
+                myPanel.add(new JLabel("Farbe:"));
+                myPanel.add(colorBox);
+                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+                myPanel.add(new JLabel("x:"));
+                myPanel.add(xCord);
+                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+                myPanel.add(new JLabel("y:"));
+                myPanel.add(yCord);
+                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+                myPanel.add(new JLabel("rotation:"));
+                myPanel.add(rotationCord);
 
-                if (rotationCord.getText().equals("")) {
-                    rotationCord.setText("0");
+                int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Koordinaten, Rotation und Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+                if (result == JOptionPane.OK_OPTION) {
+
+                    if (rotationCord.getText().equals("")) {
+                        rotationCord.setText("0");
+                    }
+                    instance.pencil.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), colorBox.getSelectedItem().toString());
+                    return;
                 }
-                instance.pencil.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()));
-                return;
-            }}
+            }
             JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
         });
         //Erstelle Stift-Summoner
         createPencil.addActionListener(e -> {
+            if (instance.checkPencil()) {
+                return;
+            }
             instance.createPencil();
-                });
+        });
+        //Setze Hintergrundfarbe
+        setBackground.addActionListener(e -> {
+
+            //Dialog
+            JTextField Farbe = new JTextField(5);
+
+            //Setze String-Array
+            String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
+
+            //Setze Dialog
+            JPanel myPanel = new JPanel();
+            JComboBox colorBox = new JComboBox(color);
+            myPanel.add(new JLabel("Farbe:"));
+            myPanel.add(colorBox);
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+                if (colorBox.getSelectedItem().toString().equals("Eigene")) {
+
+                    //Dialog
+                    JTextField rValue = new JTextField(5);
+                    JTextField gValue = new JTextField(5);
+                    JTextField bValue = new JTextField(5);
+
+                    JPanel myPanel2 = new JPanel();
+                    myPanel2.add(new JLabel("Rot-Wert"));
+                    myPanel2.add(rValue);
+                    myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
+                    myPanel2.add(new JLabel("Grün-Wert"));
+                    myPanel2.add(gValue);
+                    myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
+                    myPanel2.add(new JLabel("Blau-Wert:"));
+                    myPanel2.add(bValue);
+
+                    int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
+                    if (result2 == JOptionPane.OK_OPTION) {
+                        instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(Integer.parseInt(rValue.getText()),Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
+
+                    }
+                    return;
+                }
+
+                instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(colorBox.getSelectedItem().toString()));
+            }
+
+        });
 
         //Erstelle Zurücksetzen
         deleteAll.addActionListener(e -> {
             instance.fenster.loescheAlles();
             instance.pencil.bewegeBis(0, 0);
+            instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(0,0,0));
         });
 
         instanceControl.setLayout(new FlowLayout());
@@ -148,12 +213,15 @@ class Gui {
         instanceControl.getContentPane().add(comboBox);
         instanceControl.getContentPane().add(deleteAll);
         instanceControl.getContentPane().add(createPencil);
+        instanceControl.getContentPane().add(setBackground);
 
         instanceControl.setLocationRelativeTo(null);
         instanceControl.setVisible(true);
 
 
     }
+
+
 
 }
 
