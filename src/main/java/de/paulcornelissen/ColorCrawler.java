@@ -74,7 +74,7 @@ public class ColorCrawler {
 
     public static Color getColor(int r, int g, int b) {
 
-        fetchedColor = Farbe.rgb(r,g,b);
+        fetchedColor = Farbe.rgb(r, g, b);
         return fetchedColor;
     }
 

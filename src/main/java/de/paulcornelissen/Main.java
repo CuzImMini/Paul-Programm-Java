@@ -7,6 +7,7 @@ public class Main {
         //Starte GUI
         Gui programm = new Gui();
 
+
         //Testcode für manuelle Erstellung von Instanzen
         //
         //Instance instanceVariableX = new Instance("Name", 500,500,true);

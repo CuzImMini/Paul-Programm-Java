@@ -1,15 +1,7 @@
 package de.paulcornelissen;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.Box;
-import javax.swing.JOptionPane;
-import javax.swing.JCheckBox;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -19,62 +11,7 @@ class Gui {
     public Gui() {
         this.mainframe();
     }
-    public void mainframe() {
 
-        //Erstellung Mainframe
-        JFrame frame = new JFrame("Mein UI");
-
-        //Beende Prozess, wenn Fenster geschlossen wird
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Setze Fensterattribute
-        frame.setSize(300, 75);
-
-        //Erstellung Knöpfe
-        JButton startButton = new JButton("Start-Konstruktor");
-
-        //Erstellung StartKnopf
-        startButton.addActionListener(e -> {
-
-            //Fenster-Dialog
-            JTextField breite = new JTextField(5);
-            JTextField hoehe = new JTextField(5);
-            JTextField name = new JTextField(5);
-            JCheckBox summonPencil = new JCheckBox();
-
-            JPanel myPanel = new JPanel();
-            myPanel.add(new JLabel("Breite: "));
-            myPanel.add(breite);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Hoehe: "));
-            myPanel.add(hoehe);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Name: "));
-            myPanel.add(name);
-            myPanel.add(Box.createHorizontalStrut(15));//Abstand
-            myPanel.add(new JLabel("Stift erzeugen?"));
-            myPanel.add(summonPencil);
-
-            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result == JOptionPane.OK_OPTION) {
-
-
-                Thread t = new Thread(() -> {
-                    //fenster1 = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected());
-                    controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
-                });
-                t.start();
-            }
-        });
-
-
-        //Initialisierung Frame
-        frame.getContentPane().add(startButton);
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
     public static void controlFrame(Instance instance, String name) {
 
         JFrame instanceControl = new JFrame("Zeichen-Controller " + name);
@@ -189,7 +126,7 @@ class Gui {
 
                     int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
                     if (result2 == JOptionPane.OK_OPTION) {
-                        instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(Integer.parseInt(rValue.getText()),Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
+                        instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
 
                     }
                     return;
@@ -204,7 +141,7 @@ class Gui {
         deleteAll.addActionListener(e -> {
             instance.fenster.loescheAlles();
             instance.pencil.bewegeBis(0, 0);
-            instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(0,0,0));
+            instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(0, 0, 0));
         });
 
         instanceControl.setLayout(new FlowLayout());
@@ -221,7 +158,61 @@ class Gui {
 
     }
 
+    public void mainframe() {
 
+        //Erstellung Mainframe
+        JFrame frame = new JFrame("Mein UI");
+
+        //Beende Prozess, wenn Fenster geschlossen wird
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Setze Fensterattribute
+        frame.setSize(300, 75);
+
+        //Erstellung Knöpfe
+        JButton startButton = new JButton("Start-Konstruktor");
+
+        //Erstellung StartKnopf
+        startButton.addActionListener(e -> {
+
+            //Fenster-Dialog
+            JTextField breite = new JTextField(5);
+            JTextField hoehe = new JTextField(5);
+            JTextField name = new JTextField(5);
+            JCheckBox summonPencil = new JCheckBox();
+
+            JPanel myPanel = new JPanel();
+            myPanel.add(new JLabel("Breite: "));
+            myPanel.add(breite);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("Hoehe: "));
+            myPanel.add(hoehe);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("Name: "));
+            myPanel.add(name);
+            myPanel.add(Box.createHorizontalStrut(15));//Abstand
+            myPanel.add(new JLabel("Stift erzeugen?"));
+            myPanel.add(summonPencil);
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+
+
+                Thread t = new Thread(() -> {
+                    //fenster1 = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected());
+                    controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
+                });
+            }
+        });
+
+
+        //Initialisierung Frame
+        frame.getContentPane().add(startButton);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 
 }
 
