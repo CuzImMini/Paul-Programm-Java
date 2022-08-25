@@ -12,7 +12,64 @@ class Gui {
         this.mainframe();
     }
 
-    public static void controlFrame(Instance instance, String name) {
+    public void mainframe() {
+
+        //Erstellung Mainframe
+        JFrame frame = new JFrame("Mein UI");
+
+        //Beende Prozess, wenn Fenster geschlossen wird
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //Setze Fensterattribute
+        frame.setSize(300, 75);
+
+        //Erstellung Knöpfe
+        JButton startButton = new JButton("Start-Konstruktor");
+
+        //Erstellung StartKnopf
+        startButton.addActionListener(e -> {
+
+            //Fenster-Dialog
+            JTextField breite = new JTextField(5);
+            JTextField hoehe = new JTextField(5);
+            JTextField name = new JTextField(5);
+            JCheckBox summonPencil = new JCheckBox();
+
+            JPanel myPanel = new JPanel();
+            myPanel.add(new JLabel("Breite: "));
+            myPanel.add(breite);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("Hoehe: "));
+            myPanel.add(hoehe);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("Name: "));
+            myPanel.add(name);
+            myPanel.add(Box.createHorizontalStrut(15));//Abstand
+            myPanel.add(new JLabel("Stift erzeugen?"));
+            myPanel.add(summonPencil);
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION) {
+
+
+                Thread t = new Thread(() -> {
+                    //fenster1 = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected());
+                    controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
+                });
+                t.start();
+            }
+        });
+
+
+        //Initialisierung Frame
+        frame.getContentPane().add(startButton);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    public void controlFrame(Instance instance, String name) {
 
         JFrame instanceControl = new JFrame("Zeichen-Controller " + name);
 
@@ -27,7 +84,7 @@ class Gui {
         });
 
         //Setze Fensterattribute
-        instanceControl.setSize(300, 150);
+        instanceControl.setSize(300, 200);
 
         //Setze String-Array
         String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
@@ -38,6 +95,7 @@ class Gui {
         JButton createPencil = new JButton("Stift erzeugen");
         JButton setBackground = new JButton("Hintergrundfarbe setzen");
         JComboBox comboBox = new JComboBox(objekte);
+        JToggleButton toggleButton = new JToggleButton("Zeichenmodus ein");
 
         //Erstellung Zeichenknopf
         drawButton.addActionListener(e -> {
@@ -137,6 +195,22 @@ class Gui {
 
         });
 
+        //Erstelle Toggle-Button
+        toggleButton.addActionListener(e -> {
+
+            if (instance.checkPencil()) {
+
+                if (toggleButton.isSelected()) {
+                    instance.addPaintingListener();
+                } else {
+                    instance.removePaintingListener();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
+                toggleButton.setSelected(false);
+            }
+        });
+
         //Erstelle Zurücksetzen
         deleteAll.addActionListener(e -> {
             instance.fenster.loescheAlles();
@@ -151,6 +225,7 @@ class Gui {
         instanceControl.getContentPane().add(deleteAll);
         instanceControl.getContentPane().add(createPencil);
         instanceControl.getContentPane().add(setBackground);
+        instanceControl.getContentPane().add(toggleButton);
 
         instanceControl.setLocationRelativeTo(null);
         instanceControl.setVisible(true);
@@ -158,61 +233,18 @@ class Gui {
 
     }
 
-    public void mainframe() {
 
-        //Erstellung Mainframe
-        JFrame frame = new JFrame("Mein UI");
+    public void paintFrame(Instance instance) {
 
-        //Beende Prozess, wenn Fenster geschlossen wird
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame paintFrame = new JFrame("Paul-Paint");
 
-        //Setze Fensterattribute
-        frame.setSize(300, 75);
+        paintFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        //Erstellung Knöpfe
-        JButton startButton = new JButton("Start-Konstruktor");
-
-        //Erstellung StartKnopf
-        startButton.addActionListener(e -> {
-
-            //Fenster-Dialog
-            JTextField breite = new JTextField(5);
-            JTextField hoehe = new JTextField(5);
-            JTextField name = new JTextField(5);
-            JCheckBox summonPencil = new JCheckBox();
-
-            JPanel myPanel = new JPanel();
-            myPanel.add(new JLabel("Breite: "));
-            myPanel.add(breite);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Hoehe: "));
-            myPanel.add(hoehe);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Name: "));
-            myPanel.add(name);
-            myPanel.add(Box.createHorizontalStrut(15));//Abstand
-            myPanel.add(new JLabel("Stift erzeugen?"));
-            myPanel.add(summonPencil);
-
-            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result == JOptionPane.OK_OPTION) {
+        instance.addPaintingListener();
 
 
-                Thread t = new Thread(() -> {
-                    //fenster1 = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected());
-                    controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
-                });
-            }
-        });
-
-
-        //Initialisierung Frame
-        frame.getContentPane().add(startButton);
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
+
 
 }
 

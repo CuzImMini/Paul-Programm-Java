@@ -152,7 +152,6 @@ public class Pencil extends IgelStift {
 
         if (object.equals("Baum")) {
             this.zeichneBaum(x, y, rotation, ColorCrawler.getColor(color));
-            System.out.println("Drawing-Crawler" + color);
             return;
         }
 

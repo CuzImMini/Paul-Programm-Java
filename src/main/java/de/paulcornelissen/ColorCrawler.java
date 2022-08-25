@@ -14,7 +14,6 @@ public class ColorCrawler {
 
     public static Color getColor(String color) {
 
-        System.out.println("ColorCrawler" + color);
         if (color.equals("Blau")) {
             fetchedColor = Farbe.BLAU;
             return fetchedColor;
