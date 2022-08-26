@@ -3,23 +3,30 @@ package de.paulcornelissen;
 import basis.Fenster;
 import basis.MausLauscherStandard;
 
+import java.awt.*;
+
 public class Instance {
 
     //Variabeln
-    public Fenster fenster;
+    private Fenster fenster;
     public Pencil pencil;
+    private int breite;
+    private int hoehe;
+
+    public String name;
 
     public MausLauscherStandard paintListener;
 
-    public Instance(String name, int breite, int hoehe, boolean summonPencil) {
+    public Instance(String n, int b, int h, boolean summonPencil) {
 
+        this.breite = b;
+        this.hoehe = h;
+        this.name = n;
         fenster = new Fenster(name, breite, hoehe);
 
         if (summonPencil) {
             pencil = new Pencil();
-
         }
-
     }
 
     public void closeInstance(Instance instance) {
@@ -35,7 +42,6 @@ public class Instance {
         if (pencil == null) {
             return false;
         }
-        ;
         return true;
     }
 
@@ -43,7 +49,7 @@ public class Instance {
         MausLauscherStandard paintListener = new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
-                pencil.bewegeBis(i,i1);
+                pencil.bewegeBis(i, i1);
                 pencil.runter();
             }
 
@@ -53,7 +59,7 @@ public class Instance {
 
             @Override
             public void bearbeiteMausLos(Object o, int i, int i1) {
-pencil.hoch();
+                pencil.hoch();
             }
 
             @Override
@@ -68,7 +74,7 @@ pencil.hoch();
 
             @Override
             public void bearbeiteMausGezogen(Object o, int i, int i1) {
-                pencil.bewegeBis(i,i1);
+                pencil.bewegeBis(i, i1);
             }
         };
         this.fenster.setzeMausLauscherStandard(paintListener);
@@ -77,6 +83,27 @@ pencil.hoch();
     public void removePaintingListener() {
         this.fenster.entferneMausLauscherStandard(paintListener);
     }
+
+    public int getBreite() {
+        return breite;
+    }
+
+    public int getHoehe() {
+        return breite;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setBackgroundColor(Color color) {
+        this.fenster.setzeHintergrundFarbe(color);
+    }
+
+    public void reset() {
+        this.fenster.loescheAlles();
+    }
+
 
 
 }

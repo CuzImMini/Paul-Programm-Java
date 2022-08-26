@@ -184,13 +184,12 @@ class Gui {
 
                     int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
                     if (result2 == JOptionPane.OK_OPTION) {
-                        instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
-
+                        instance.setBackgroundColor(ColorCrawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
                     }
                     return;
                 }
 
-                instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(colorBox.getSelectedItem().toString()));
+                instance.setBackgroundColor(ColorCrawler.getColor(colorBox.getSelectedItem().toString()));
             }
 
         });
@@ -213,9 +212,11 @@ class Gui {
 
         //Erstelle Zurücksetzen
         deleteAll.addActionListener(e -> {
-            instance.fenster.loescheAlles();
+            //instance.fenster.loescheAlles();
+            instance.reset();
             instance.pencil.bewegeBis(0, 0);
-            instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(0, 0, 0));
+            instance.setBackgroundColor(ColorCrawler.getColor("Weiß"));
+            //instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(255, 255, 255));
         });
 
         instanceControl.setLayout(new FlowLayout());
