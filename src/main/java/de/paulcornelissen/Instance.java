@@ -9,7 +9,7 @@ public class Instance {
 
     //Variabeln
     private Fenster fenster;
-    public Pencil pencil;
+    private Pencil pencil;
     private int breite;
     private int hoehe;
 
@@ -104,6 +104,30 @@ public class Instance {
         this.fenster.loescheAlles();
     }
 
+    public void drawingCrawler(String object, int x, int y, int rotation, String color) {
 
+        if (object.equals("Baum")) {
+            this.pencil.zeichneBaum(x, y, rotation, Crawler.getColor(color));
+            return;
+        }
 
+        if (object.equals("Buchstabe")) {
+            this.pencil.zeichneBuchstabe(x, y, rotation, Crawler.getColor(color));
+            return;
+        }
+
+        if (object.equals("Stern")) {
+            this.pencil.zeichneStern(x, y, rotation, Crawler.getColor(color));
+            return;
+        }
+
+        if (object.equals("Haus")) {
+            this.pencil.zeichneHaus(x, y, rotation, Crawler.getColor(color));
+        }
+
+    }
+
+    public Pencil getPencil() {
+        return pencil;
+    }
 }

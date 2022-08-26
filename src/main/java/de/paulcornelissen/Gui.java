@@ -84,7 +84,7 @@ class Gui {
         });
 
         //Setze Fensterattribute
-        instanceControl.setSize(300, 200);
+        instanceControl.setSize(325, 200);
 
         //Setze String-Array
         String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
@@ -134,7 +134,7 @@ class Gui {
                     if (rotationCord.getText().equals("")) {
                         rotationCord.setText("0");
                     }
-                    instance.pencil.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), colorBox.getSelectedItem().toString());
+                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), colorBox.getSelectedItem().toString());
                     return;
                 }
             }
@@ -184,25 +184,45 @@ class Gui {
 
                     int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
                     if (result2 == JOptionPane.OK_OPTION) {
-                        instance.setBackgroundColor(ColorCrawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
+                        instance.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
                     }
                     return;
                 }
 
-                instance.setBackgroundColor(ColorCrawler.getColor(colorBox.getSelectedItem().toString()));
+                instance.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
             }
 
         });
+        //Erstelle Paint-Farbwahl
+        String[] colors = {"Schwarz", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Weiß"};
+        JComboBox colorSelector = new JComboBox<>(colors);
+        colorSelector.addActionListener(e -> {
+            instance.getPencil().setzeFarbe(Crawler.getColor(colorSelector.getSelectedItem().toString()));
+        });
+        //Erstelle Paint-Breite-Auswahl
+        String[] breiten = {"dünn", "normal", "dick"};
+        JComboBox breiteSelector = new JComboBox<>(breiten);
+        breiteSelector.addActionListener(e -> {
+            instance.getPencil().setzeLinienBreite(Crawler.getWidth(breiteSelector.getSelectedItem().toString()));
+        });
 
-        //Erstelle Toggle-Button
+        //Erstelle Paint-Toggle-Button
         toggleButton.addActionListener(e -> {
 
             if (instance.checkPencil()) {
 
                 if (toggleButton.isSelected()) {
                     instance.addPaintingListener();
+                    instanceControl.getContentPane().add(colorSelector);
+                    instanceControl.getContentPane().add(breiteSelector);
+                    instanceControl.setVisible(true);
+                    instance.getPencil().setzeFarbe(Crawler.getColor("Schwarz"));
                 } else {
                     instance.removePaintingListener();
+                    instanceControl.getContentPane().remove(colorSelector);
+                    instanceControl.getContentPane().remove(breiteSelector);
+                    instanceControl.setVisible(false);
+                    instanceControl.setVisible(true);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
@@ -212,12 +232,11 @@ class Gui {
 
         //Erstelle Zurücksetzen
         deleteAll.addActionListener(e -> {
-            //instance.fenster.loescheAlles();
             instance.reset();
-            instance.pencil.bewegeBis(0, 0);
-            instance.setBackgroundColor(ColorCrawler.getColor("Weiß"));
-            //instance.fenster.setzeHintergrundFarbe(ColorCrawler.getColor(255, 255, 255));
+            instance.getPencil().bewegeBis(0, 0);
+            instance.setBackgroundColor(Crawler.getColor("Weiß"));
         });
+
 
         instanceControl.setLayout(new FlowLayout());
 
@@ -230,18 +249,6 @@ class Gui {
 
         instanceControl.setLocationRelativeTo(null);
         instanceControl.setVisible(true);
-
-
-    }
-
-
-    public void paintFrame(Instance instance) {
-
-        JFrame paintFrame = new JFrame("Paul-Paint");
-
-        paintFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        instance.addPaintingListener();
 
 
     }

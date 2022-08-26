@@ -147,27 +147,4 @@ public class Pencil extends IgelStift {
 
     }
 
-
-    public void drawingCrawler(String object, int x, int y, int rotation, String color) {
-
-        if (object.equals("Baum")) {
-            this.zeichneBaum(x, y, rotation, ColorCrawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Buchstabe")) {
-            this.zeichneBuchstabe(x, y, rotation, ColorCrawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Stern")) {
-            this.zeichneStern(x, y, rotation, ColorCrawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Haus")) {
-            this.zeichneHaus(x, y, rotation, ColorCrawler.getColor(color));
-        }
-
-    }
 }

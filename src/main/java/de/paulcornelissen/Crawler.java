@@ -4,11 +4,12 @@ import basis.Farbe;
 
 import java.awt.*;
 
-public class ColorCrawler {
+public class Crawler {
 
     private static Color fetchedColor;
+    private static int fetchedWidth;
 
-    public ColorCrawler() {
+    public Crawler() {
 
     }
 
@@ -77,4 +78,19 @@ public class ColorCrawler {
         return fetchedColor;
     }
 
+    public static int getWidth(String width) {
+        if (width.equals("dünn")) {
+            fetchedWidth = 2;
+            return fetchedWidth;
+        }
+        if (width.equals("normal")) {
+            fetchedWidth = 4;
+            return fetchedWidth;
+        }
+        if (width.equals("dick")) {
+            fetchedWidth = 6;
+            return fetchedWidth;
+        }
+        return 4;
+    }
 }
