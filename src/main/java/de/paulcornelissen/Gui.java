@@ -214,13 +214,11 @@ class Gui {
                 if (toggleButton.isSelected()) {
                     instance.addPaintingListener();
                     instanceControl.getContentPane().add(colorSelector);
-                    instanceControl.getContentPane().add(breiteSelector);
                     instanceControl.setVisible(true);
                     instance.getPencil().setzeFarbe(Crawler.getColor("Schwarz"));
                 } else {
                     instance.removePaintingListener();
                     instanceControl.getContentPane().remove(colorSelector);
-                    instanceControl.getContentPane().remove(breiteSelector);
                     instanceControl.setVisible(false);
                     instanceControl.setVisible(true);
                 }
@@ -240,6 +238,7 @@ class Gui {
 
         instanceControl.setLayout(new FlowLayout());
 
+        instanceControl.getContentPane().add(breiteSelector);
         instanceControl.getContentPane().add(drawButton);
         instanceControl.getContentPane().add(comboBox);
         instanceControl.getContentPane().add(deleteAll);
