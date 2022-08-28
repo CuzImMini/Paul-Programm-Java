@@ -25,6 +25,7 @@ class Gui {
 
         //Erstellung Knöpfe
         JButton startButton = new JButton("Start-Konstruktor");
+        JButton fastStart = new JButton("Schnellstart");
 
         //Erstellung StartKnopf
         startButton.addActionListener(e -> {
@@ -54,16 +55,24 @@ class Gui {
 
 
                 Thread t = new Thread(() -> {
-                    //fenster1 = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected());
                     controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
                 });
                 t.start();
             }
         });
+        //Erstellung Schnellstart-Knopf
+        fastStart.addActionListener(e -> {
+            Thread t = new Thread(() -> {
+                controlFrame(new Instance("Zeichenfläche", 600, 600, true), "Zeichenfläche");
+            });
+            t.start();
+        });
 
 
         //Initialisierung Frame
         frame.getContentPane().add(startButton);
+        frame.getContentPane().add(fastStart);
+        frame.setLayout(new FlowLayout());
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -212,7 +221,22 @@ class Gui {
             if (instance.checkPencil()) {
 
                 if (toggleButton.isSelected()) {
-                    instance.addPaintingListener();
+
+                    JPanel mypanel3 = new JPanel();
+                    JCheckBox objectPlacement = new JCheckBox();
+                    mypanel3.add(new JLabel("Objekte platzieren? Zum Zeichnen leer lassen."));
+                    mypanel3.add(objectPlacement);
+                    boolean placeObjects;
+
+                    String[] options = {"Zeichnen", "Objekte platzieren"};
+                    int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    if (result3 == 1) {
+                        placeObjects = true;
+                    } else {
+                        placeObjects = false;
+                    }
+
+                    instance.addPaintingListener(comboBox, placeObjects);
                     instanceControl.getContentPane().add(colorSelector);
                     instanceControl.setVisible(true);
                     instance.getPencil().setzeFarbe(Crawler.getColor("Schwarz"));
@@ -238,13 +262,15 @@ class Gui {
 
         instanceControl.setLayout(new FlowLayout());
 
-        instanceControl.getContentPane().add(breiteSelector);
         instanceControl.getContentPane().add(drawButton);
-        instanceControl.getContentPane().add(comboBox);
         instanceControl.getContentPane().add(deleteAll);
         instanceControl.getContentPane().add(createPencil);
         instanceControl.getContentPane().add(setBackground);
         instanceControl.getContentPane().add(toggleButton);
+        instanceControl.getContentPane().add(breiteSelector);
+        instanceControl.getContentPane().add(comboBox);
+
+
 
         instanceControl.setLocationRelativeTo(null);
         instanceControl.setVisible(true);

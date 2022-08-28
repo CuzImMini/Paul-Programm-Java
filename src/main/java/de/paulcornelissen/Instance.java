@@ -3,6 +3,7 @@ package de.paulcornelissen;
 import basis.Fenster;
 import basis.MausLauscherStandard;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class Instance {
@@ -45,12 +46,18 @@ public class Instance {
         return true;
     }
 
-    public void addPaintingListener() {
+    public void addPaintingListener(JComboBox comboBox, Boolean objectPlacement) {
         MausLauscherStandard paintListener = new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
-                pencil.bewegeBis(i, i1);
-                pencil.runter();
+
+                if(objectPlacement) {
+                    drawingCrawler(comboBox.getSelectedItem().toString(),i,i1,0,getColour());
+                    return;
+                }
+                    pencil.bewegeBis(i, i1);
+                    pencil.runter();
+
             }
 
             @Override
@@ -64,7 +71,6 @@ public class Instance {
 
             @Override
             public void bearbeiteMausLosRechts(Object o, int i, int i1) {
-                pencil.normal();
             }
 
             @Override
@@ -127,7 +133,33 @@ public class Instance {
 
     }
 
+    public void drawingCrawler(String object, int x, int y, int rotation, Color color) {
+
+        if (object.equals("Baum")) {
+            this.pencil.zeichneBaum(x, y, rotation, color);
+            return;
+        }
+
+        if (object.equals("Buchstabe")) {
+            this.pencil.zeichneBuchstabe(x, y, rotation, color);
+            return;
+        }
+
+        if (object.equals("Stern")) {
+            this.pencil.zeichneStern(x, y, rotation, color);
+            return;
+        }
+
+        if (object.equals("Haus")) {
+            this.pencil.zeichneHaus(x, y, rotation, color);
+        }
+
+    }
+
     public Pencil getPencil() {
         return pencil;
+    }
+    public Color getColour() {
+        return pencil.farbe();
     }
 }
