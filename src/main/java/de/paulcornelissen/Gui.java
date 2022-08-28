@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 
 class Gui {
@@ -54,17 +55,13 @@ class Gui {
             if (result == JOptionPane.OK_OPTION) {
 
 
-                Thread t = new Thread(() -> {
-                    controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText());
-                });
+                Thread t = new Thread(() -> controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText()));
                 t.start();
             }
         });
         //Erstellung Schnellstart-Knopf
         fastStart.addActionListener(e -> {
-            Thread t = new Thread(() -> {
-                controlFrame(new Instance("Zeichenfläche", 600, 600, true), "Zeichenfläche");
-            });
+            Thread t = new Thread(() -> controlFrame(new Instance("Zeichenfläche", 600, 600, true), "Zeichenfläche"));
             t.start();
         });
 
@@ -103,7 +100,7 @@ class Gui {
         JButton deleteAll = new JButton("Alles löschen");
         JButton createPencil = new JButton("Stift erzeugen");
         JButton setBackground = new JButton("Hintergrundfarbe setzen");
-        JComboBox comboBox = new JComboBox(objekte);
+        JComboBox<String> comboBox = new JComboBox<>(objekte);
         JToggleButton toggleButton = new JToggleButton("Zeichenmodus ein");
 
         //Erstellung Zeichenknopf
@@ -111,7 +108,7 @@ class Gui {
 
             if (instance.checkPencil()) {
 
-                String malObjekt = comboBox.getSelectedItem().toString();
+                String malObjekt = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
 
                 //Dialog
                 JTextField xCord = new JTextField(5);
@@ -123,7 +120,7 @@ class Gui {
 
 
                 JPanel myPanel = new JPanel();
-                JComboBox colorBox = new JComboBox(color);
+                JComboBox<String> colorBox = new JComboBox<>(color);
                 myPanel.add(new JLabel("Farbe:"));
                 myPanel.add(colorBox);
                 myPanel.add(Box.createHorizontalStrut(15)); //Abstand
@@ -143,7 +140,7 @@ class Gui {
                     if (rotationCord.getText().equals("")) {
                         rotationCord.setText("0");
                     }
-                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), colorBox.getSelectedItem().toString());
+                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorBox.getSelectedItem()).toString());
                     return;
                 }
             }
@@ -159,22 +156,19 @@ class Gui {
         //Setze Hintergrundfarbe
         setBackground.addActionListener(e -> {
 
-            //Dialog
-            JTextField Farbe = new JTextField(5);
-
             //Setze String-Array
             String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
 
             //Setze Dialog
             JPanel myPanel = new JPanel();
-            JComboBox colorBox = new JComboBox(color);
+            JComboBox<String> colorBox = new JComboBox<>(color);
             myPanel.add(new JLabel("Farbe:"));
             myPanel.add(colorBox);
 
             int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
 
             if (result == JOptionPane.OK_OPTION) {
-                if (colorBox.getSelectedItem().toString().equals("Eigene")) {
+                if (Objects.requireNonNull(colorBox.getSelectedItem()).toString().equals("Eigene")) {
 
                     //Dialog
                     JTextField rValue = new JTextField(5);
@@ -204,16 +198,12 @@ class Gui {
         });
         //Erstelle Paint-Farbwahl
         String[] colors = {"Schwarz", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Weiß"};
-        JComboBox colorSelector = new JComboBox<>(colors);
-        colorSelector.addActionListener(e -> {
-            instance.getPencil().setzeFarbe(Crawler.getColor(colorSelector.getSelectedItem().toString()));
-        });
+        JComboBox<String> colorSelector = new JComboBox<>(colors);
+        colorSelector.addActionListener(e -> instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString())));
         //Erstelle Paint-Breite-Auswahl
         String[] breiten = {"dünn", "normal", "dick"};
-        JComboBox breiteSelector = new JComboBox<>(breiten);
-        breiteSelector.addActionListener(e -> {
-            instance.getPencil().setzeLinienBreite(Crawler.getWidth(breiteSelector.getSelectedItem().toString()));
-        });
+        JComboBox<String> breiteSelector = new JComboBox<>(breiten);
+        breiteSelector.addActionListener(e -> instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(breiteSelector.getSelectedItem()).toString())));
 
         //Erstelle Paint-Toggle-Button
         toggleButton.addActionListener(e -> {
@@ -230,11 +220,7 @@ class Gui {
 
                     String[] options = {"Zeichnen", "Objekte platzieren"};
                     int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                    if (result3 == 1) {
-                        placeObjects = true;
-                    } else {
-                        placeObjects = false;
-                    }
+                    placeObjects = result3 == 1;
 
                     instance.addPaintingListener(comboBox, placeObjects);
                     instanceControl.getContentPane().add(colorSelector);
@@ -269,7 +255,6 @@ class Gui {
         instanceControl.getContentPane().add(toggleButton);
         instanceControl.getContentPane().add(breiteSelector);
         instanceControl.getContentPane().add(comboBox);
-
 
 
         instanceControl.setLocationRelativeTo(null);

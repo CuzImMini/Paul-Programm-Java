@@ -5,24 +5,23 @@ import basis.MausLauscherStandard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class Instance {
 
     //Variabeln
-    private Fenster fenster;
+    private final Fenster fenster;
+    public String name;
+    public MausLauscherStandard paintListener;
     private Pencil pencil;
     private int breite;
     private int hoehe;
 
-    public String name;
-
-    public MausLauscherStandard paintListener;
-
     public Instance(String n, int b, int h, boolean summonPencil) {
 
-        this.breite = b;
-        this.hoehe = h;
-        this.name = n;
+        breite = b;
+        hoehe = h;
+        name = n;
         fenster = new Fenster(name, breite, hoehe);
 
         if (summonPencil) {
@@ -40,23 +39,20 @@ public class Instance {
     }
 
     public boolean checkPencil() {
-        if (pencil == null) {
-            return false;
-        }
-        return true;
+        return pencil != null;
     }
 
-    public void addPaintingListener(JComboBox comboBox, Boolean objectPlacement) {
+    public void addPaintingListener(JComboBox<String> comboBox, Boolean objectPlacement) {
         MausLauscherStandard paintListener = new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
 
-                if(objectPlacement) {
-                    drawingCrawler(comboBox.getSelectedItem().toString(),i,i1,0,getColour());
+                if (objectPlacement) {
+                    drawingCrawler(Objects.requireNonNull(comboBox.getSelectedItem()).toString(), i, i1, 0, getColour());
                     return;
                 }
-                    pencil.bewegeBis(i, i1);
-                    pencil.runter();
+                pencil.bewegeBis(i, i1);
+                pencil.runter();
 
             }
 
@@ -159,7 +155,14 @@ public class Instance {
     public Pencil getPencil() {
         return pencil;
     }
+
     public Color getColour() {
         return pencil.farbe();
+    }
+
+    public void setFenster(int h, int b) {
+        breite = b;
+        hoehe = h;
+        fenster.setzeGroesse(breite, hoehe);
     }
 }

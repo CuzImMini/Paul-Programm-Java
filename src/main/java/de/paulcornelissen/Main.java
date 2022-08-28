@@ -14,6 +14,9 @@ public class Main {
         //instanceVariableX.pencil.zeichneStern(150,150,0, ColorCrawler.getColor("Schwarz"));
         //Instance instance = new Instance("Testinstanz", 600,600, true);
         //instanceVariableX.addBackground("/Users/paulcornelissen/Downloads/Output/macOS-Graphic-Light.jpeg");
+
+        //To-DO
+        //Methoden in Klasse "Instanz" implementieren
     }
 
 }

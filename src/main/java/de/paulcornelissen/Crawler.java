@@ -7,7 +7,6 @@ import java.awt.*;
 public class Crawler {
 
     private static Color fetchedColor;
-    private static int fetchedWidth;
 
     public Crawler() {
 
@@ -79,6 +78,7 @@ public class Crawler {
     }
 
     public static int getWidth(String width) {
+        int fetchedWidth;
         if (width.equals("dünn")) {
             fetchedWidth = 2;
             return fetchedWidth;
