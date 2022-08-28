@@ -16,7 +16,7 @@ class Gui {
     public void mainframe() {
 
         //Erstellung Mainframe
-        JFrame frame = new JFrame("Mein UI");
+        JFrame frame = new JFrame("Paul-Paint");
 
         //Beende Prozess, wenn Fenster geschlossen wird
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,6 +98,7 @@ class Gui {
         //Erstellung Knöpfe
         JButton drawButton = new JButton("zeichnen");
         JButton deleteAll = new JButton("Alles löschen");
+        JButton changeWindow = new JButton("Größe ändern");
         JButton createPencil = new JButton("Stift erzeugen");
         JButton setBackground = new JButton("Hintergrundfarbe setzen");
         JComboBox<String> comboBox = new JComboBox<>(objekte);
@@ -245,11 +246,37 @@ class Gui {
             instance.setBackgroundColor(Crawler.getColor("Weiß"));
         });
 
+        //Erstelle Fenster-Größen-Veränderung
+        changeWindow.addActionListener(e -> {
+
+            JTextField neueBreite = new JTextField(5);
+            JTextField neueHoehe = new JTextField(5);
+
+            JPanel mypanel4 = new JPanel();
+            mypanel4.add(new JLabel("Neue höhe:"));
+            mypanel4.add(neueHoehe);
+            mypanel4.add(Box.createHorizontalStrut(15));
+            mypanel4.add(new JLabel("Neue breite:"));
+            mypanel4.add(neueBreite);
+            mypanel4.add(Box.createHorizontalStrut(20));
+            mypanel4.add(new JLabel("alte Höhe:  " + instance.getHoehe()));
+            mypanel4.add(Box.createHorizontalStrut(10));
+            mypanel4.add(new JLabel("alte Breite:  " + instance.getBreite()));
+
+            int result4 = JOptionPane.showConfirmDialog(null, mypanel4, "Bitte neue Dimensionen wählen", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result4 == JOptionPane.OK_OPTION) {
+                instance.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
+            }
+
+        });
+
 
         instanceControl.setLayout(new FlowLayout());
 
         instanceControl.getContentPane().add(drawButton);
         instanceControl.getContentPane().add(deleteAll);
+        instanceControl.getContentPane().add(changeWindow);
         instanceControl.getContentPane().add(createPencil);
         instanceControl.getContentPane().add(setBackground);
         instanceControl.getContentPane().add(toggleButton);
