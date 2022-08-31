@@ -2,6 +2,8 @@ package de.paulcornelissen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Objects;
 
 public class Gui extends JFrame {
@@ -13,7 +15,6 @@ public class Gui extends JFrame {
     private JComboBox<String> objectSelector;
     private JComboBox<String> widthSelector;
     private JToggleButton drawingToggle;
-
     private Instance instance;
 
     public void mainframe(String title) {
@@ -23,7 +24,7 @@ public class Gui extends JFrame {
         String[] breiten = {"dünn", "normal", "dick"};
         String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
 
-
+        //Initialisierung Elemente
         JLabel titleLable = new JLabel();
         JButton startConstructor = new JButton();
         JButton fastStart = new JButton();
@@ -37,21 +38,30 @@ public class Gui extends JFrame {
         JButton testButton = new JButton();
 
         //---default-close-operation---
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (instance == null) {
+                    return;
+                }
+                instance.closeInstance();
+            }
+        });
 
-        //======== Title ========
+        //Titel
         setTitle(title);
         setBackground(Color.white);
         var contentPane = getContentPane();
 
-        //---- label1 ----
+        //Willkommens-Label
         titleLable.setText("Willkommen bei " + title + "!");
         titleLable.setForeground(Color.red);
         titleLable.setHorizontalAlignment(SwingConstants.LEFT);
         titleLable.setFont(titleLable.getFont().deriveFont(titleLable.getFont().getStyle() | Font.BOLD, titleLable.getFont().getSize() + 3f));
         titleLable.setBackground(new Color(51, 0, 51));
 
-        //---- Erstelle Paint-Farbwahl ----
+        //Paint-Farbwahl
         JComboBox<String> colorSelector = new JComboBox<>(color);
         colorSelector.setSelectedItem(color[12]);
         colorSelector.addActionListener(e -> {
@@ -61,7 +71,7 @@ public class Gui extends JFrame {
             instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
         });
 
-        //---- Erstelle Breiten-Selektor ----
+        //Breiten-Selektor
         widthSelector = new JComboBox<>(breiten);
         widthSelector.setSelectedItem(breiten[1]);
         widthSelector.addActionListener(ee -> {
@@ -71,7 +81,7 @@ public class Gui extends JFrame {
             instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
         });
 
-        //---- startConstructor ----
+        //startConstructor
         startConstructor.setText("Eigene Zeichenfl\u00e4che");
         startConstructor.addActionListener(e -> {
             //Fenster-Dialog
@@ -93,20 +103,26 @@ public class Gui extends JFrame {
             myPanel.add(new JLabel("Stift erzeugen?"));
             myPanel.add(summonPencil);
 
-            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
+            if (instance == null) {
+                int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
 
-            if (result == JOptionPane.OK_OPTION) {
-
-                if (instance == null) {
+                if (result == JOptionPane.OK_OPTION && !breite.getText().equals("") && !hoehe.getText().equals("") && !name.getText().equals("")) {
                     Thread t = new Thread(() -> instance = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
                     t.start();
-                } else {
-                    changeWindowDialog();
+                    return;
                 }
+                if (result == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+                {
+                    JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
+                }
+            } else {
+                changeWindowDialog();
             }
         });
 
-        //---- fastStart ----
+        //fastStart
         fastStart.setText("Schnellstart");
         fastStart.addActionListener(e -> {
 
@@ -118,11 +134,11 @@ public class Gui extends JFrame {
             }
         });
 
-        //---- changeWindows ----
+        //changeWindows
         changeWindows.setText("Fenster \u00e4ndern");
         changeWindows.addActionListener(e -> changeWindowDialog());
 
-        //---- resetAll ----
+        //resetAll
         resetAll.setText("Fenster leeren");
         resetAll.addActionListener(e -> {
             if (instance == null) {
@@ -133,7 +149,7 @@ public class Gui extends JFrame {
             instance.setBackgroundColor(Crawler.getColor("Weiß"));
         });
 
-        //---- drawingToggle ----
+        //drawingToggle
         drawingToggle.setText("Zeichenmodus ein");
         drawingToggle.addActionListener(e -> {
             if (instance == null) {
@@ -156,16 +172,16 @@ public class Gui extends JFrame {
                     instance.addPaintingListener(objectSelector, placeObjects);
                     instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
                     instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
-                } else {
-                    instance.removePaintingListener();
+                    return;
                 }
+                instance.removePaintingListener();
             } else {
                 JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
                 drawingToggle.setSelected(false);
             }
         });
 
-        //---- drawManually ----
+        //drawManually
         drawManually.setText("zeichnen");
         drawManually.addActionListener(e -> {
             if (instance == null) {
@@ -193,7 +209,7 @@ public class Gui extends JFrame {
 
                 int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Koordinaten, Rotation und Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
 
-                if (result == JOptionPane.OK_OPTION) {
+                if (result == JOptionPane.OK_OPTION && !xCord.getText().equals("") && !yCord.getText().equals("") && !rotationCord.getText().equals("")) {
 
                     if (rotationCord.getText().equals("")) {
                         rotationCord.setText("0");
@@ -201,12 +217,16 @@ public class Gui extends JFrame {
                     instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
                     return;
                 }
+                if (result == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+                JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
                 return;
             }
             JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
         });
 
-        //---- summonPencil ----
+        //summonPencil
         summonPencil1.setText("Stift erzeugen");
         summonPencil1.addActionListener(e -> {
             if (instance == null) {
@@ -218,7 +238,7 @@ public class Gui extends JFrame {
             instance.createPencil();
         });
 
-        //---- setBackground ----
+        //setBackground
         testButton.setText("Hintergrund");
         testButton.addActionListener(e -> {
             if (instance == null) {
@@ -251,9 +271,13 @@ public class Gui extends JFrame {
                     myPanel2.add(bValue);
 
                     int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
-                    if (result2 == JOptionPane.OK_OPTION) {
+                    if (result2 == JOptionPane.OK_OPTION && !rValue.getText().equals("") && !gValue.getText().equals("") && !bValue.getText().equals("")) {
                         instance.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
                     }
+                    if (result2 == JOptionPane.CANCEL_OPTION) {
+                        return;
+                    }
+                    JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
                     return;
                 }
 
@@ -261,71 +285,11 @@ public class Gui extends JFrame {
             }
         });
 
-
+        //Layout
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
-        contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addComponent(startConstructor)
-                                                                        .addComponent(changeWindows, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                                .addGap(18, 18, 18)
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addComponent(resetAll, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(fastStart, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                                                .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
-                                                                        .addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                        .addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
-                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                        .addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
-                                                                .addComponent(titleLable, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(61, 61, 61))
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(drawingToggle, GroupLayout.PREFERRED_SIZE, 371, GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                                .addComponent(drawManually, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(summonPencil1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(testButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(titleLable)
-                                .addGap(18, 18, 18)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(startConstructor)
-                                        .addComponent(fastStart))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(drawManually)
-                                        .addComponent(summonPencil1)
-                                        .addComponent(testButton))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(drawingToggle)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(changeWindows)
-                                        .addComponent(resetAll))
-                                .addGap(37, 37, 37))
-        );
+        contentPaneLayout.setHorizontalGroup(contentPaneLayout.createParallelGroup().addGroup(contentPaneLayout.createSequentialGroup().addGap(59, 59, 59).addGroup(contentPaneLayout.createParallelGroup().addGroup(contentPaneLayout.createSequentialGroup().addGroup(contentPaneLayout.createParallelGroup().addGroup(contentPaneLayout.createSequentialGroup().addGroup(contentPaneLayout.createParallelGroup().addComponent(startConstructor).addComponent(changeWindows, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)).addGap(18, 18, 18).addGroup(contentPaneLayout.createParallelGroup().addComponent(resetAll, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(fastStart, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))).addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false).addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup().addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE).addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)).addComponent(titleLable, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE))).addGap(61, 61, 61)).addGroup(contentPaneLayout.createSequentialGroup().addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false).addComponent(drawingToggle, GroupLayout.PREFERRED_SIZE, 371, GroupLayout.PREFERRED_SIZE).addGroup(contentPaneLayout.createSequentialGroup().addComponent(drawManually, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(summonPencil1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(testButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))).addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))));
+        contentPaneLayout.setVerticalGroup(contentPaneLayout.createParallelGroup().addGroup(contentPaneLayout.createSequentialGroup().addGap(20, 20, 20).addComponent(titleLable).addGap(18, 18, 18).addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(startConstructor).addComponent(fastStart)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE).addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(drawManually).addComponent(summonPencil1).addComponent(testButton)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(drawingToggle).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE).addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(changeWindows).addComponent(resetAll)).addGap(37, 37, 37)));
         pack();
         setLocationRelativeTo(getOwner());
         setVisible(true);
@@ -353,8 +317,11 @@ public class Gui extends JFrame {
 
         int result4 = JOptionPane.showConfirmDialog(null, mypanel4, "Bitte neue Dimensionen wählen", JOptionPane.OK_CANCEL_OPTION);
 
-        if (result4 == JOptionPane.OK_OPTION) {
+        if (result4 == JOptionPane.OK_OPTION && !neueHoehe.getText().equals("") && !neueBreite.getText().equals("")) {
             instance.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
         }
 
     }

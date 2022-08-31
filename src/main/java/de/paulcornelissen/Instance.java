@@ -29,9 +29,8 @@ public class Instance {
         }
     }
 
-    public void closeInstance(Instance instance) {
-        instance.fenster.setzeSichtbar(false);
-
+    public void closeInstance() {
+        this.fenster.setzeSichtbar(false);
     }
 
     public void createPencil() {
@@ -43,17 +42,17 @@ public class Instance {
     }
 
     public void addPaintingListener(JComboBox<String> comboBox, Boolean objectPlacement) {
-        MausLauscherStandard paintListener = new MausLauscherStandard() {
+         paintListener = new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
 
                 if (objectPlacement) {
                     drawingCrawler(Objects.requireNonNull(comboBox.getSelectedItem()).toString(), i, i1, 0, getColour());
                     return;
+                } else {
+                    pencil.bewegeBis(i, i1);
+                    pencil.runter();
                 }
-                pencil.bewegeBis(i, i1);
-                pencil.runter();
-
             }
 
             @Override
@@ -83,7 +82,7 @@ public class Instance {
     }
 
     public void removePaintingListener() {
-        this.fenster.entferneMausLauscherStandard(paintListener);
+        fenster.entferneMausLauscherStandard(paintListener);
     }
 
     public int getBreite() {
@@ -165,4 +164,5 @@ public class Instance {
         hoehe = h;
         fenster.setzeGroesse(breite, hoehe);
     }
+
 }

@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] s) {
 
         //Starte GUI
-        Application application = new Application("Paul-Paint");
+        Application paulPaint = new Application("Paul-Paint");
 
     }
 
