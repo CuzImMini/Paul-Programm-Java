@@ -66,6 +66,10 @@ public class Crawler {
             fetchedColor = Farbe.WEISS;
             return fetchedColor;
         }
+        if (color.equals("Eigene")) {
+            fetchedColor = getColor(255,255,255);
+            return fetchedColor;
+        }
 
 
         return fetchedColor;

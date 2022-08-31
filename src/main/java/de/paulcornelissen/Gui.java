@@ -2,35 +2,78 @@ package de.paulcornelissen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Objects;
 
+public class Gui extends JFrame {
 
-class Gui {
-
-    public Gui() {
-        this.mainframe();
+    public Gui(String title) {
+        this.mainframe(title);
     }
 
-    public void mainframe() {
+    private JComboBox<String> objectSelector;
+    private JComboBox<String> widthSelector;
+    private JToggleButton drawingToggle;
 
-        //Erstellung Mainframe
-        JFrame frame = new JFrame("Paul-Paint");
+    private Instance instance;
 
-        //Beende Prozess, wenn Fenster geschlossen wird
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public void mainframe(String title) {
 
-        //Setze Fensterattribute
-        frame.setSize(300, 75);
+        //Setze String-Array
+        String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
+        String[] breiten = {"dünn", "normal", "dick"};
+        String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
 
-        //Erstellung Knöpfe
-        JButton startButton = new JButton("Start-Konstruktor");
-        JButton fastStart = new JButton("Schnellstart");
 
-        //Erstellung StartKnopf
-        startButton.addActionListener(e -> {
+        JLabel titleLable = new JLabel();
+        JButton startConstructor = new JButton();
+        JButton fastStart = new JButton();
+        JButton changeWindows = new JButton();
+        JButton resetAll = new JButton();
+        objectSelector = new JComboBox<>(objekte);
+        widthSelector = new JComboBox<>(breiten);
+        drawingToggle = new JToggleButton();
+        JButton drawManually = new JButton();
+        JButton summonPencil1 = new JButton();
+        JButton testButton = new JButton();
 
+        //---default-close-operation---
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        //======== Title ========
+        setTitle(title);
+        setBackground(Color.white);
+        var contentPane = getContentPane();
+
+        //---- label1 ----
+        titleLable.setText("Willkommen bei " + title + "!");
+        titleLable.setForeground(Color.red);
+        titleLable.setHorizontalAlignment(SwingConstants.LEFT);
+        titleLable.setFont(titleLable.getFont().deriveFont(titleLable.getFont().getStyle() | Font.BOLD, titleLable.getFont().getSize() + 3f));
+        titleLable.setBackground(new Color(51, 0, 51));
+
+        //---- Erstelle Paint-Farbwahl ----
+        JComboBox<String> colorSelector = new JComboBox<>(color);
+        colorSelector.setSelectedItem(color[12]);
+        colorSelector.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
+            instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
+        });
+
+        //---- Erstelle Breiten-Selektor ----
+        widthSelector = new JComboBox<>(breiten);
+        widthSelector.setSelectedItem(breiten[1]);
+        widthSelector.addActionListener(ee -> {
+            if (instance == null) {
+                return;
+            }
+            instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
+        });
+
+        //---- startConstructor ----
+        startConstructor.setText("Eigene Zeichenfl\u00e4che");
+        startConstructor.addActionListener(e -> {
             //Fenster-Dialog
             JTextField breite = new JTextField(5);
             JTextField hoehe = new JTextField(5);
@@ -54,76 +97,90 @@ class Gui {
 
             if (result == JOptionPane.OK_OPTION) {
 
-
-                Thread t = new Thread(() -> controlFrame(new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()), name.getText()));
-                t.start();
+                if (instance == null) {
+                    Thread t = new Thread(() -> instance = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
+                    t.start();
+                } else {
+                    changeWindowDialog();
+                }
             }
         });
-        //Erstellung Schnellstart-Knopf
+
+        //---- fastStart ----
+        fastStart.setText("Schnellstart");
         fastStart.addActionListener(e -> {
-            Thread t = new Thread(() -> controlFrame(new Instance("Zeichenfläche", 600, 600, true), "Zeichenfläche"));
-            t.start();
-        });
 
-
-        //Initialisierung Frame
-        frame.getContentPane().add(startButton);
-        frame.getContentPane().add(fastStart);
-        frame.setLayout(new FlowLayout());
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
-    public void controlFrame(Instance instance, String name) {
-
-        JFrame instanceControl = new JFrame("Zeichen-Controller " + name);
-
-        //Beende Prozess, wenn Fenster geschlossen wird
-        instanceControl.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        instanceControl.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                instanceControl.dispose();
-                instance.closeInstance(instance);
+            if (instance == null) {
+                Thread t = new Thread(() -> instance = new Instance("Zeichenfläche", 600, 600, true));
+                t.start();
+            } else {
+                changeWindowDialog();
             }
         });
 
-        //Setze Fensterattribute
-        instanceControl.setSize(325, 200);
+        //---- changeWindows ----
+        changeWindows.setText("Fenster \u00e4ndern");
+        changeWindows.addActionListener(e -> changeWindowDialog());
 
-        //Setze String-Array
-        String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
+        //---- resetAll ----
+        resetAll.setText("Fenster leeren");
+        resetAll.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
+            instance.reset();
+            instance.getPencil().bewegeBis(0, 0);
+            instance.setBackgroundColor(Crawler.getColor("Weiß"));
+        });
 
-        //Erstellung Knöpfe
-        JButton drawButton = new JButton("zeichnen");
-        JButton deleteAll = new JButton("Alles löschen");
-        JButton changeWindow = new JButton("Größe ändern");
-        JButton createPencil = new JButton("Stift erzeugen");
-        JButton setBackground = new JButton("Hintergrundfarbe setzen");
-        JComboBox<String> comboBox = new JComboBox<>(objekte);
-        JToggleButton toggleButton = new JToggleButton("Zeichenmodus ein");
-
-        //Erstellung Zeichenknopf
-        drawButton.addActionListener(e -> {
-
+        //---- drawingToggle ----
+        drawingToggle.setText("Zeichenmodus ein");
+        drawingToggle.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
             if (instance.checkPencil()) {
 
-                String malObjekt = Objects.requireNonNull(comboBox.getSelectedItem()).toString();
+                if (drawingToggle.isSelected()) {
+
+                    JPanel mypanel3 = new JPanel();
+                    JCheckBox objectPlacement = new JCheckBox();
+                    mypanel3.add(new JLabel("Objekte platzieren? Zum Zeichnen leer lassen."));
+                    mypanel3.add(objectPlacement);
+                    boolean placeObjects;
+
+                    String[] options = {"Zeichnen", "Objekte platzieren"};
+                    int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                    placeObjects = result3 == 1;
+
+                    instance.addPaintingListener(objectSelector, placeObjects);
+                    instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
+                    instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
+                } else {
+                    instance.removePaintingListener();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
+                drawingToggle.setSelected(false);
+            }
+        });
+
+        //---- drawManually ----
+        drawManually.setText("zeichnen");
+        drawManually.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
+            if (instance.checkPencil()) {
+                String malObjekt = Objects.requireNonNull(objectSelector.getSelectedItem()).toString();
 
                 //Dialog
                 JTextField xCord = new JTextField(5);
                 JTextField yCord = new JTextField(5);
                 JTextField rotationCord = new JTextField(5);
 
-                //Setze String-Array
-                String[] color = {"Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
-
 
                 JPanel myPanel = new JPanel();
-                JComboBox<String> colorBox = new JComboBox<>(color);
-                myPanel.add(new JLabel("Farbe:"));
-                myPanel.add(colorBox);
                 myPanel.add(Box.createHorizontalStrut(15)); //Abstand
                 myPanel.add(new JLabel("x:"));
                 myPanel.add(xCord);
@@ -141,25 +198,32 @@ class Gui {
                     if (rotationCord.getText().equals("")) {
                         rotationCord.setText("0");
                     }
-                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorBox.getSelectedItem()).toString());
+                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
                     return;
                 }
+                return;
             }
             JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
         });
-        //Erstelle Stift-Summoner
-        createPencil.addActionListener(e -> {
+
+        //---- summonPencil ----
+        summonPencil1.setText("Stift erzeugen");
+        summonPencil1.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
             if (instance.checkPencil()) {
                 return;
             }
             instance.createPencil();
         });
-        //Setze Hintergrundfarbe
-        setBackground.addActionListener(e -> {
 
-            //Setze String-Array
-            String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
-
+        //---- setBackground ----
+        testButton.setText("Hintergrund");
+        testButton.addActionListener(e -> {
+            if (instance == null) {
+                return;
+            }
             //Setze Dialog
             JPanel myPanel = new JPanel();
             JComboBox<String> colorBox = new JComboBox<>(color);
@@ -195,101 +259,103 @@ class Gui {
 
                 instance.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
             }
-
-        });
-        //Erstelle Paint-Farbwahl
-        String[] colors = {"Schwarz", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Weiß"};
-        JComboBox<String> colorSelector = new JComboBox<>(colors);
-        colorSelector.addActionListener(e -> instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString())));
-        //Erstelle Paint-Breite-Auswahl
-        String[] breiten = {"dünn", "normal", "dick"};
-        JComboBox<String> breiteSelector = new JComboBox<>(breiten);
-        breiteSelector.addActionListener(e -> instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(breiteSelector.getSelectedItem()).toString())));
-
-        //Erstelle Paint-Toggle-Button
-        toggleButton.addActionListener(e -> {
-
-            if (instance.checkPencil()) {
-
-                if (toggleButton.isSelected()) {
-
-                    JPanel mypanel3 = new JPanel();
-                    JCheckBox objectPlacement = new JCheckBox();
-                    mypanel3.add(new JLabel("Objekte platzieren? Zum Zeichnen leer lassen."));
-                    mypanel3.add(objectPlacement);
-                    boolean placeObjects;
-
-                    String[] options = {"Zeichnen", "Objekte platzieren"};
-                    int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                    placeObjects = result3 == 1;
-
-                    instance.addPaintingListener(comboBox, placeObjects);
-                    instanceControl.getContentPane().add(colorSelector);
-                    instanceControl.setVisible(true);
-                    instance.getPencil().setzeFarbe(Crawler.getColor("Schwarz"));
-                } else {
-                    instance.removePaintingListener();
-                    instanceControl.getContentPane().remove(colorSelector);
-                    instanceControl.setVisible(false);
-                    instanceControl.setVisible(true);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
-                toggleButton.setSelected(false);
-            }
-        });
-
-        //Erstelle Zurücksetzen
-        deleteAll.addActionListener(e -> {
-            instance.reset();
-            instance.getPencil().bewegeBis(0, 0);
-            instance.setBackgroundColor(Crawler.getColor("Weiß"));
-        });
-
-        //Erstelle Fenster-Größen-Veränderung
-        changeWindow.addActionListener(e -> {
-
-            JTextField neueBreite = new JTextField(5);
-            JTextField neueHoehe = new JTextField(5);
-
-            JPanel mypanel4 = new JPanel();
-            mypanel4.add(new JLabel("Neue höhe:"));
-            mypanel4.add(neueHoehe);
-            mypanel4.add(Box.createHorizontalStrut(15));
-            mypanel4.add(new JLabel("Neue breite:"));
-            mypanel4.add(neueBreite);
-            mypanel4.add(Box.createHorizontalStrut(20));
-            mypanel4.add(new JLabel("alte Höhe:  " + instance.getHoehe()));
-            mypanel4.add(Box.createHorizontalStrut(10));
-            mypanel4.add(new JLabel("alte Breite:  " + instance.getBreite()));
-
-            int result4 = JOptionPane.showConfirmDialog(null, mypanel4, "Bitte neue Dimensionen wählen", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result4 == JOptionPane.OK_OPTION) {
-                instance.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
-            }
-
         });
 
 
-        instanceControl.setLayout(new FlowLayout());
-
-        instanceControl.getContentPane().add(drawButton);
-        instanceControl.getContentPane().add(deleteAll);
-        instanceControl.getContentPane().add(changeWindow);
-        instanceControl.getContentPane().add(createPencil);
-        instanceControl.getContentPane().add(setBackground);
-        instanceControl.getContentPane().add(toggleButton);
-        instanceControl.getContentPane().add(breiteSelector);
-        instanceControl.getContentPane().add(comboBox);
-
-
-        instanceControl.setLocationRelativeTo(null);
-        instanceControl.setVisible(true);
-
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addGap(59, 59, 59)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                        .addComponent(startConstructor)
+                                                                        .addComponent(changeWindows, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                        .addComponent(resetAll, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(fastStart, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                                .addGroup(GroupLayout.Alignment.LEADING, contentPaneLayout.createSequentialGroup()
+                                                                        .addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, 119, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(titleLable, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)))
+                                                .addGap(61, 61, 61))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(drawingToggle, GroupLayout.PREFERRED_SIZE, 371, GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addComponent(drawManually, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(summonPencil1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(testButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        contentPaneLayout.setVerticalGroup(
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(titleLable)
+                                .addGap(18, 18, 18)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(startConstructor)
+                                        .addComponent(fastStart))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(drawManually)
+                                        .addComponent(summonPencil1)
+                                        .addComponent(testButton))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(drawingToggle)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(objectSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(widthSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(colorSelector, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(changeWindows)
+                                        .addComponent(resetAll))
+                                .addGap(37, 37, 37))
+        );
+        pack();
+        setLocationRelativeTo(getOwner());
+        setVisible(true);
 
     }
 
 
-}
+    public void changeWindowDialog() {
+        if (instance == null) {
+            return;
+        }
+        JTextField neueBreite = new JTextField(5);
+        JTextField neueHoehe = new JTextField(5);
 
+        JPanel mypanel4 = new JPanel();
+        mypanel4.add(new JLabel("Neue höhe:"));
+        mypanel4.add(neueHoehe);
+        mypanel4.add(Box.createHorizontalStrut(15));
+        mypanel4.add(new JLabel("Neue breite:"));
+        mypanel4.add(neueBreite);
+        mypanel4.add(Box.createHorizontalStrut(20));
+        mypanel4.add(new JLabel("alte Höhe:  " + instance.getHoehe()));
+        mypanel4.add(Box.createHorizontalStrut(10));
+        mypanel4.add(new JLabel("alte Breite:  " + instance.getBreite()));
+
+        int result4 = JOptionPane.showConfirmDialog(null, mypanel4, "Bitte neue Dimensionen wählen", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result4 == JOptionPane.OK_OPTION) {
+            instance.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
+        }
+
+    }
+}
