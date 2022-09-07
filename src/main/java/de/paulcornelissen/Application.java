@@ -2,8 +2,9 @@ package de.paulcornelissen;
 
 public class Application {
 
+    public Gui gui;
     public Application(String title) {
-        Gui gui = new Gui(title);
+        gui = new Gui(title);
     }
 
 }

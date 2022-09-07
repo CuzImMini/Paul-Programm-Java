@@ -15,14 +15,16 @@ public class Gui extends JFrame {
     private JComboBox<String> objectSelector;
     private JComboBox<String> widthSelector;
     private JToggleButton drawingToggle;
-    private Instance instance;
+    public Instance instance;
+    JComboBox<String> colorSelector;
+    String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
+
 
     public void mainframe(String title) {
 
         //Setze String-Array
         String[] objekte = {"Baum", "Haus", "Buchstabe", "Stern"};
         String[] breiten = {"dünn", "normal", "dick"};
-        String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
 
         //Initialisierung Elemente
         JLabel titleLable = new JLabel();
@@ -62,7 +64,7 @@ public class Gui extends JFrame {
         titleLable.setBackground(new Color(51, 0, 51));
 
         //Paint-Farbwahl
-        JComboBox<String> colorSelector = new JComboBox<>(color);
+        colorSelector = new JComboBox<>(color);
         colorSelector.setSelectedItem(color[12]);
         colorSelector.addActionListener(e -> {
             if (instance == null) {
@@ -74,7 +76,7 @@ public class Gui extends JFrame {
         //Breiten-Selektor
         widthSelector = new JComboBox<>(breiten);
         widthSelector.setSelectedItem(breiten[1]);
-        widthSelector.addActionListener(ee -> {
+        widthSelector.addActionListener(e -> {
             if (instance == null) {
                 return;
             }
@@ -83,56 +85,11 @@ public class Gui extends JFrame {
 
         //startConstructor
         startConstructor.setText("Eigene Zeichenfl\u00e4che");
-        startConstructor.addActionListener(e -> {
-            //Fenster-Dialog
-            JTextField breite = new JTextField(5);
-            JTextField hoehe = new JTextField(5);
-            JTextField name = new JTextField(5);
-            JCheckBox summonPencil = new JCheckBox();
-
-            JPanel myPanel = new JPanel();
-            myPanel.add(new JLabel("Breite: "));
-            myPanel.add(breite);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Hoehe: "));
-            myPanel.add(hoehe);
-            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-            myPanel.add(new JLabel("Name: "));
-            myPanel.add(name);
-            myPanel.add(Box.createHorizontalStrut(15));//Abstand
-            myPanel.add(new JLabel("Stift erzeugen?"));
-            myPanel.add(summonPencil);
-
-            if (instance == null) {
-                int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
-
-                if (result == JOptionPane.OK_OPTION && !breite.getText().equals("") && !hoehe.getText().equals("") && !name.getText().equals("")) {
-                    Thread t = new Thread(() -> instance = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
-                    t.start();
-                    return;
-                }
-                if (result == JOptionPane.CANCEL_OPTION) {
-                    return;
-                }
-                {
-                    JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
-                }
-            } else {
-                changeWindowDialog();
-            }
-        });
+        startConstructor.addActionListener(e -> startConstuctor());
 
         //fastStart
         fastStart.setText("Schnellstart");
-        fastStart.addActionListener(e -> {
-
-            if (instance == null) {
-                Thread t = new Thread(() -> instance = new Instance("Zeichenfläche", 600, 600, true));
-                t.start();
-            } else {
-                changeWindowDialog();
-            }
-        });
+        fastStart.addActionListener(e -> fastStart());
 
         //changeWindows
         changeWindows.setText("Fenster \u00e4ndern");
@@ -140,150 +97,23 @@ public class Gui extends JFrame {
 
         //resetAll
         resetAll.setText("Fenster leeren");
-        resetAll.addActionListener(e -> {
-            if (instance == null) {
-                return;
-            }
-            instance.reset();
-            instance.getPencil().bewegeBis(0, 0);
-            instance.setBackgroundColor(Crawler.getColor("Weiß"));
-        });
+        resetAll.addActionListener(e -> resetAll());
 
         //drawingToggle
         drawingToggle.setText("Zeichenmodus ein");
-        drawingToggle.addActionListener(e -> {
-            if (instance == null) {
-                return;
-            }
-            if (instance.checkPencil()) {
-
-                if (drawingToggle.isSelected()) {
-
-                    JPanel mypanel3 = new JPanel();
-                    JCheckBox objectPlacement = new JCheckBox();
-                    mypanel3.add(new JLabel("Objekte platzieren? Zum Zeichnen leer lassen."));
-                    mypanel3.add(objectPlacement);
-                    boolean placeObjects;
-
-                    String[] options = {"Zeichnen", "Objekte platzieren"};
-                    int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-                    placeObjects = result3 == 1;
-
-                    instance.addPaintingListener(objectSelector, placeObjects);
-                    instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
-                    instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
-                    return;
-                }
-                instance.removePaintingListener();
-            } else {
-                JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
-                drawingToggle.setSelected(false);
-            }
-        });
+        drawingToggle.addActionListener(e -> drawingToggle());
 
         //drawManually
         drawManually.setText("zeichnen");
-        drawManually.addActionListener(e -> {
-            if (instance == null) {
-                return;
-            }
-            if (instance.checkPencil()) {
-                String malObjekt = Objects.requireNonNull(objectSelector.getSelectedItem()).toString();
-
-                //Dialog
-                JTextField xCord = new JTextField(5);
-                JTextField yCord = new JTextField(5);
-                JTextField rotationCord = new JTextField(5);
-
-
-                JPanel myPanel = new JPanel();
-                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-                myPanel.add(new JLabel("x:"));
-                myPanel.add(xCord);
-                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-                myPanel.add(new JLabel("y:"));
-                myPanel.add(yCord);
-                myPanel.add(Box.createHorizontalStrut(15)); //Abstand
-                myPanel.add(new JLabel("rotation:"));
-                myPanel.add(rotationCord);
-
-                int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Koordinaten, Rotation und Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
-
-                if (result == JOptionPane.OK_OPTION && !xCord.getText().equals("") && !yCord.getText().equals("") && !rotationCord.getText().equals("")) {
-
-                    if (rotationCord.getText().equals("")) {
-                        rotationCord.setText("0");
-                    }
-                    instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
-                    return;
-                }
-                if (result == JOptionPane.CANCEL_OPTION) {
-                    return;
-                }
-                JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
-                return;
-            }
-            JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
-        });
+        drawManually.addActionListener(e -> drawManually());
 
         //summonPencil
         summonPencil1.setText("Stift erzeugen");
-        summonPencil1.addActionListener(e -> {
-            if (instance == null) {
-                return;
-            }
-            if (instance.checkPencil()) {
-                return;
-            }
-            instance.createPencil();
-        });
+        summonPencil1.addActionListener(e -> summonPencil());
 
         //setBackground
         testButton.setText("Hintergrund");
-        testButton.addActionListener(e -> {
-            if (instance == null) {
-                return;
-            }
-            //Setze Dialog
-            JPanel myPanel = new JPanel();
-            JComboBox<String> colorBox = new JComboBox<>(color);
-            myPanel.add(new JLabel("Farbe:"));
-            myPanel.add(colorBox);
-
-            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result == JOptionPane.OK_OPTION) {
-                if (Objects.requireNonNull(colorBox.getSelectedItem()).toString().equals("Eigene")) {
-
-                    //Dialog
-                    JTextField rValue = new JTextField(5);
-                    JTextField gValue = new JTextField(5);
-                    JTextField bValue = new JTextField(5);
-
-                    JPanel myPanel2 = new JPanel();
-                    myPanel2.add(new JLabel("Rot-Wert"));
-                    myPanel2.add(rValue);
-                    myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
-                    myPanel2.add(new JLabel("Grün-Wert"));
-                    myPanel2.add(gValue);
-                    myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
-                    myPanel2.add(new JLabel("Blau-Wert:"));
-                    myPanel2.add(bValue);
-
-                    int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
-                    if (result2 == JOptionPane.OK_OPTION && !rValue.getText().equals("") && !gValue.getText().equals("") && !bValue.getText().equals("")) {
-                        instance.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
-                    }
-                    if (result2 == JOptionPane.CANCEL_OPTION) {
-                        return;
-                    }
-                    JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
-                    return;
-                }
-
-                instance.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
-            }
-        });
+        testButton.addActionListener(e -> setBackground());
 
         //Layout
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
@@ -325,4 +155,195 @@ public class Gui extends JFrame {
         }
 
     }
+
+    public Instance startConstuctor() {
+        //Fenster-Dialog
+        JTextField breite = new JTextField(5);
+        JTextField hoehe = new JTextField(5);
+        JTextField name = new JTextField(5);
+        JCheckBox summonPencil = new JCheckBox();
+
+        JPanel myPanel = new JPanel();
+        myPanel.add(new JLabel("Breite: "));
+        myPanel.add(breite);
+        myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+        myPanel.add(new JLabel("Hoehe: "));
+        myPanel.add(hoehe);
+        myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+        myPanel.add(new JLabel("Name: "));
+        myPanel.add(name);
+        myPanel.add(Box.createHorizontalStrut(15));//Abstand
+        myPanel.add(new JLabel("Stift erzeugen?"));
+        myPanel.add(summonPencil);
+
+        if (instance == null) {
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION && !breite.getText().equals("") && !hoehe.getText().equals("") && !name.getText().equals("")) {
+                Thread t = new Thread(() -> instance = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
+                t.start();
+                return instance;
+            }
+            if (result == JOptionPane.CANCEL_OPTION) {
+                return instance;
+            }
+            {
+                JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
+            }
+        } else {
+            changeWindowDialog();
+        }
+        return instance;
+    }
+
+    public Instance fastStart() {
+        if (instance == null) {
+            Thread t = new Thread(() -> instance = new Instance("Zeichenfläche", 600, 600, true));
+            t.start();
+        } else {
+            changeWindowDialog();
+        }
+        return instance;
+    }
+
+    public void resetAll() {
+
+        if (instance == null) {
+            return;
+        }
+        instance.reset();
+        instance.getPencil().bewegeBis(0, 0);
+        instance.setBackgroundColor(Crawler.getColor("Weiß"));
+    }
+
+    public void drawingToggle() {
+        if (instance == null) {
+            return;
+        }
+        if (instance.checkPencil()) {
+
+            if (drawingToggle.isSelected()) {
+
+                JPanel mypanel3 = new JPanel();
+                JCheckBox objectPlacement = new JCheckBox();
+                mypanel3.add(new JLabel("Objekte platzieren? Zum Zeichnen leer lassen."));
+                mypanel3.add(objectPlacement);
+                boolean placeObjects;
+
+                String[] options = {"Zeichnen", "Objekte platzieren"};
+                int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                placeObjects = result3 == 1;
+
+                instance.addPaintingListener(objectSelector, placeObjects);
+                instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
+                instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
+                return;
+            }
+            instance.removePaintingListener();
+        } else {
+            JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
+            drawingToggle.setSelected(false);
+        }
+    }
+
+    public void setBackground() {
+
+        if (instance == null) {
+            return;
+        }
+        //Setze Dialog
+        JPanel myPanel = new JPanel();
+        JComboBox<String> colorBox = new JComboBox<>(color);
+        myPanel.add(new JLabel("Farbe:"));
+        myPanel.add(colorBox);
+
+        int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (Objects.requireNonNull(colorBox.getSelectedItem()).toString().equals("Eigene")) {
+
+                //Dialog
+                JTextField rValue = new JTextField(5);
+                JTextField gValue = new JTextField(5);
+                JTextField bValue = new JTextField(5);
+
+                JPanel myPanel2 = new JPanel();
+                myPanel2.add(new JLabel("Rot-Wert"));
+                myPanel2.add(rValue);
+                myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
+                myPanel2.add(new JLabel("Grün-Wert"));
+                myPanel2.add(gValue);
+                myPanel2.add(Box.createHorizontalStrut(15)); //Abstand
+                myPanel2.add(new JLabel("Blau-Wert:"));
+                myPanel2.add(bValue);
+
+                int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
+                if (result2 == JOptionPane.OK_OPTION && !rValue.getText().equals("") && !gValue.getText().equals("") && !bValue.getText().equals("")) {
+                    instance.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
+                }
+                if (result2 == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+                JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
+                return;
+            }
+
+            instance.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
+        }
+    }
+
+    public void summonPencil() {
+        if (instance == null) {
+            return;
+        }
+        if (instance.checkPencil()) {
+            return;
+        }
+        instance.createPencil();
+    }
+
+    public void drawManually() {
+        if (instance == null) {
+            return;
+        }
+        if (instance.checkPencil()) {
+            String malObjekt = Objects.requireNonNull(objectSelector.getSelectedItem()).toString();
+
+            //Dialog
+            JTextField xCord = new JTextField(5);
+            JTextField yCord = new JTextField(5);
+            JTextField rotationCord = new JTextField(5);
+
+
+            JPanel myPanel = new JPanel();
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("x:"));
+            myPanel.add(xCord);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("y:"));
+            myPanel.add(yCord);
+            myPanel.add(Box.createHorizontalStrut(15)); //Abstand
+            myPanel.add(new JLabel("rotation:"));
+            myPanel.add(rotationCord);
+
+            int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Koordinaten, Rotation und Farbe wählen.", JOptionPane.OK_CANCEL_OPTION);
+
+            if (result == JOptionPane.OK_OPTION && !xCord.getText().equals("") && !yCord.getText().equals("") && !rotationCord.getText().equals("")) {
+
+                if (rotationCord.getText().equals("")) {
+                    rotationCord.setText("0");
+                }
+                instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
+                return;
+            }
+            if (result == JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+            JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
+            return;
+        }
+        JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
+    }
+
 }
+

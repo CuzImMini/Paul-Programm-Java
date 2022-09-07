@@ -42,7 +42,7 @@ public class Instance {
     }
 
     public void addPaintingListener(JComboBox<String> comboBox, Boolean objectPlacement) {
-         paintListener = new MausLauscherStandard() {
+        paintListener = new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
 
@@ -105,51 +105,22 @@ public class Instance {
         this.fenster.loescheAlles();
     }
 
-    public void drawingCrawler(String object, int x, int y, int rotation, String color) {
+    public void drawingCrawler(String object, int x, int y, int rotation, String color, Object objectDrawOn) {
 
-        if (object.equals("Baum")) {
-            this.pencil.zeichneBaum(x, y, rotation, Crawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Buchstabe")) {
-            this.pencil.zeichneBuchstabe(x, y, rotation, Crawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Stern")) {
-            this.pencil.zeichneStern(x, y, rotation, Crawler.getColor(color));
-            return;
-        }
-
-        if (object.equals("Haus")) {
-            this.pencil.zeichneHaus(x, y, rotation, Crawler.getColor(color));
-        }
+        this.pencil.setObject(objectDrawOn);
+        this.pencil.setColor(Crawler.getColor(color));
+        this.drawingCrawler(object, x, y, rotation);
 
     }
 
-    public void drawingCrawler(String object, int x, int y, int rotation, Color color) {
+    public void drawingCrawler(String object, int x, int y, int rotation, Color color, Object objectDrawOn) {
 
-        if (object.equals("Baum")) {
-            this.pencil.zeichneBaum(x, y, rotation, color);
-            return;
-        }
-
-        if (object.equals("Buchstabe")) {
-            this.pencil.zeichneBuchstabe(x, y, rotation, color);
-            return;
-        }
-
-        if (object.equals("Stern")) {
-            this.pencil.zeichneStern(x, y, rotation, color);
-            return;
-        }
-
-        if (object.equals("Haus")) {
-            this.pencil.zeichneHaus(x, y, rotation, color);
-        }
+        this.pencil.setObject(objectDrawOn);
+        this.pencil.setColor(color);
+        this.drawingCrawler(object, x, y, rotation);
 
     }
+
 
     public Pencil getPencil() {
         return pencil;
@@ -164,5 +135,78 @@ public class Instance {
         hoehe = h;
         fenster.setzeGroesse(breite, hoehe);
     }
+
+    public void setBackgroundPhoto(String path) {
+        fenster.ladeBildInZeichenflaeche(path);
+    }
+
+    public void drawingCrawler(String object, int x, int y, int rotation, Object objectDrawOn, Color color) {
+
+        this.pencil.setColor(color);
+        this.pencil.setObject(objectDrawOn);
+        this.drawingCrawler(object, x, y, rotation);
+
+    }
+
+    public void drawingCrawler(String object, int x, int y, int rotation, String color) {
+
+        this.pencil.setColor(Crawler.getColor(color));
+        this.drawingCrawler(object, x, y, rotation);
+
+    }
+
+    public void drawingCrawler(String object, int x, int y, int rotation, Color color) {
+
+        this.pencil.setColor(color);
+        this.drawingCrawler(object, x, y, rotation);
+
+    }
+
+    public void drawingCrawler(String object, int x, int y, int rotation) {
+        this.pencil.setPosition(rotation);
+        this.drawingCrawler(object, x, y);
+
+
+    }
+
+    public void drawingCrawler(String object, int x, int y) {
+        this.pencil.setPosition(x, y);
+        this.drawingCrawler(object);
+
+
+    }
+
+    public void drawingCrawler(String object) {
+
+        if (object.equals("Baum")) {
+            this.pencil.zeichneBaum();
+            return;
+        }
+
+        if (object.equals("Buchstabe")) {
+            this.pencil.zeichneBuchstabe();
+            return;
+        }
+
+        if (object.equals("Stern")) {
+            this.pencil.zeichneStern();
+            return;
+        }
+
+        if (object.equals("Haus")) {
+            this.pencil.zeichneHaus();
+        }
+        if (object.equals("Hampelmann-unten")) {
+            this.pencil.zeichneHampelmannUnten();
+        }
+        if (object.equals("Hampelmann-mitte")) {
+            this.pencil.zeichneHampelmannMitte();
+        }
+        if (object.equals("Hampelmann-oben")) {
+            this.pencil.zeichneHampelmannOben();
+        }
+
+    }
+
 
 }

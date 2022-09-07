@@ -11,12 +11,35 @@ public class Pencil extends IgelStift {
     }
 
     //Methoden
-    public void zeichneBaum(int x, int y, int rotation, Color color) {
-
+    public Pencil setColor(Color color) {
         this.setzeFarbe(color);
+        return this;
+    }
+
+    public Pencil setObject(Object object) {
+        this.maleAuf(object);
+        return this;
+    }
+
+    public Pencil setPosition(int x, int y, int rotation) {
+        this.bewegeBis(x, y);
+        this.dreheBis(rotation);
+        return this;
+    }
+
+    public Pencil setPosition(int x, int y) {
+
+        this.bewegeBis(x, y);
+        return this;
+    }
+    public Pencil setPosition(int rotation) {
 
         this.dreheBis(rotation);
-        this.bewegeBis(x, y);
+        return this;
+    }
+
+
+    public void zeichneBaum() {
         this.runter();
         this.dreheUm(315);
         this.bewegeUm(75);
@@ -43,13 +66,11 @@ public class Pencil extends IgelStift {
         this.hoch();
         this.bewegeBis(0, 0);
 
+
     }
 
-    public void zeichneBuchstabe(int x, int y, int rotation, Color color) {
-        this.setzeFarbe(color);
+    public void zeichneBuchstabe() {
 
-        this.bewegeBis(x + 50, y);
-        this.dreheBis(rotation);
         this.runter();
         this.bewegeUm(100);
         this.dreheUm(270);
@@ -81,10 +102,8 @@ public class Pencil extends IgelStift {
 
     }
 
-    public void zeichneHaus(int x, int y, int rotation, Color color) {
-        this.setzeFarbe(color);
-        this.bewegeBis(x, y);
-        this.dreheBis(rotation);
+    public void zeichneHaus() {
+
         this.runter();
         for (int i = 0; i < 3; i++) {
             this.bewegeUm(75);
@@ -107,10 +126,8 @@ public class Pencil extends IgelStift {
 
     }
 
-    public void zeichneStern(int x, int y, int rotation, Color color) {
-        this.setzeFarbe(color);
-        this.bewegeBis(x, y);
-        this.dreheBis(rotation);
+    public void zeichneStern() {
+
         this.runter();
 
         for (int i = 0; i < 4; i++) {
@@ -145,6 +162,109 @@ public class Pencil extends IgelStift {
         this.bewegeBis(0, 0);
 
 
+    }
+
+    public void zeichneHampelmannUnten() {
+        this.setzeLinienBreite(5);
+
+        this.bewegeUm(100);
+        this.dreheUm(270);
+        this.bewegeUm(275);
+
+        this.runter();
+        this.dreheUm(45);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(90);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(45);
+        this.bewegeUm(75);
+
+        this.dreheUm(135);
+        this.bewegeUm(60);
+        this.dreheUm(180);
+        this.bewegeUm(60);
+        this.dreheUm(270);
+        this.bewegeUm(60);
+        this.dreheUm(180);
+        this.bewegeUm(60);
+        this.dreheUm(315);
+        this.bewegeUm(30);
+
+        this.hoch();
+        this.bewegeUm(30);
+        this.zeichneKreis(30);
+    }
+
+    public void zeichneHampelmannMitte() {
+        this.setzeLinienBreite(5);
+
+        this.bewegeUm(100);
+        this.dreheUm(270);
+        this.bewegeUm(275);
+
+        this.runter();
+        this.dreheUm(45);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(90);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(45);
+        this.bewegeUm(75);
+
+        this.dreheUm(90);
+        this.bewegeUm(60);
+        this.dreheUm(180);
+        this.bewegeUm(120);
+        this.dreheUm(180);
+        this.bewegeUm(60);
+        this.dreheUm(270);
+        this.bewegeUm(30);
+
+        this.hoch();
+        this.bewegeUm(30);
+        this.zeichneKreis(30);
+    }
+
+    public void zeichneHampelmannOben() {
+        this.setzeLinienBreite(5);
+
+        this.bewegeUm(100);
+        this.dreheUm(270);
+        this.bewegeUm(275);
+
+        this.runter();
+        this.dreheUm(45);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(90);
+        this.bewegeUm(75);
+        this.dreheUm(180);
+        this.bewegeUm(75);
+        this.dreheUm(45);
+        this.bewegeUm(75);
+
+        this.dreheUm(45);
+        this.bewegeUm(60);
+        this.dreheUm(180);
+        this.bewegeUm(60);
+        this.dreheUm(90);
+        this.bewegeUm(60);
+        this.dreheUm(180);
+        this.bewegeUm(60);
+        this.dreheUm(225);
+        this.bewegeUm(30);
+
+        this.hoch();
+        this.bewegeUm(30);
+        this.zeichneKreis(30);
     }
 
 
