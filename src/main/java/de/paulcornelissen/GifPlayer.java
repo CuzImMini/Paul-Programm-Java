@@ -15,7 +15,7 @@ public class GifPlayer {
 
                 String currentPath = new java.io.File("./repo/de/wikipedia/horse-" + i + ".png").getCanonicalPath();
                 instance.setBackgroundPhoto(currentPath);
-                Hilfe.warte(100);
+                Hilfe.warte(66);
             }
         }
     }
