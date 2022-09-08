@@ -42,6 +42,8 @@ public class Bildergalerie {
 
         while (true) {
             Daumenkino();
+
+
         }
     }
 
