@@ -1,4 +1,4 @@
-package de.paulcornelissen;
+package de.paulcornelissen.paulpaint;
 
 import basis.Fenster;
 import basis.MausLauscherStandard;

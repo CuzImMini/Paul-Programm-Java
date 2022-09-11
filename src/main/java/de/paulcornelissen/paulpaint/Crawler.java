@@ -1,4 +1,4 @@
-package de.paulcornelissen;
+package de.paulcornelissen.paulpaint;
 
 import basis.Farbe;
 
@@ -67,7 +67,7 @@ public class Crawler {
             return fetchedColor;
         }
         if (color.equals("Eigene")) {
-            fetchedColor = getColor(255,255,255);
+            fetchedColor = getColor(255, 255, 255);
             return fetchedColor;
         }
 

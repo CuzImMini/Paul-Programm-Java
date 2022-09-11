@@ -1,4 +1,4 @@
-package de.paulcornelissen;
+package de.paulcornelissen.paulpaint;
 
 import basis.IgelStift;
 
@@ -32,6 +32,7 @@ public class Pencil extends IgelStift {
         this.bewegeBis(x, y);
         return this;
     }
+
     public Pencil setPosition(int rotation) {
 
         this.dreheBis(rotation);

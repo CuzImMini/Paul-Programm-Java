@@ -1,4 +1,4 @@
-package de.paulcornelissen;
+package de.paulcornelissen.paulpaint;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,17 +8,15 @@ import java.util.Objects;
 
 public class Gui extends JFrame {
 
-    public Gui(String title) {
-        this.mainframe(title);
-    }
-
-    private JComboBox<String> objectSelector;
-    private JComboBox<String> widthSelector;
-    private JToggleButton drawingToggle;
     public Instance instance;
     JComboBox<String> colorSelector;
     String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
-
+    private JComboBox<String> objectSelector;
+    private JComboBox<String> widthSelector;
+    private JToggleButton drawingToggle;
+    public Gui(String title) {
+        this.mainframe(title);
+    }
 
     public void mainframe(String title) {
 

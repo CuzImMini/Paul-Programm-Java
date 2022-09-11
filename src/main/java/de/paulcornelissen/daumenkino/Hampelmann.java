@@ -1,16 +1,18 @@
-package de.paulcornelissen;
+package de.paulcornelissen.daumenkino;
 
 import basis.Bild;
 import basis.Hilfe;
+import de.paulcornelissen.paulpaint.Crawler;
+import de.paulcornelissen.paulpaint.Instance;
 
 import java.awt.*;
 
-public class Bildergalerie {
+public class Hampelmann {
 
     private Instance instance;
     private Bild b1, b2, b3;
 
-    public Bildergalerie() {
+    public Hampelmann() {
         this.initialize();
     }
 

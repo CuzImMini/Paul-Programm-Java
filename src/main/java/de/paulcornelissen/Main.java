@@ -1,5 +1,11 @@
 package de.paulcornelissen;
 
+import basis.vw.Einstellungen;
+import de.paulcornelissen.daumenkino.HorseGIF;
+import de.paulcornelissen.daumenkino.Hampelmann;
+import de.paulcornelissen.paulpaint.Application;
+import de.paulcornelissen.pong.Pong;
+
 import java.io.IOException;
 
 public class Main {
@@ -9,16 +15,15 @@ public class Main {
         //Starte Paint
         //Application paulPaint = new Application("Paul-Paint");
 
-        //Testinstanz
-        Instance instance = new Instance("Bildergalerie", 600, 400, false);
-        new GifPlayer().playHorseGif(instance);
+        //GifPlayer
+        //InstanceManager instance = new InstanceManager("Pauls-Daumenkino", 600, 400, false);
+        //new HorseGIF().playHorseGif(instance);
 
-        //Test-Bildergalerie
-        //TODO Bildergalerie in Gui implementieren
-        // - Knopf in GUI hinzufügen
-        //   - Knopf ruft über öffentliche Variablen die Klasse
-        //     Bildergalerie in der laufenden Instanz auf
-        //Bildergalerie bg = new Bildergalerie();
+        //Hampelmann
+        //Hampelmann hampelmann = new Hampelmann();
+
+        //Pong
+        Pong pong = new Pong();
     }
 
 }

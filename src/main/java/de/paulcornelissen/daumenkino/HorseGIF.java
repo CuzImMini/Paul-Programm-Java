@@ -1,15 +1,16 @@
-package de.paulcornelissen;
+package de.paulcornelissen.daumenkino;
 
 import basis.Hilfe;
+import de.paulcornelissen.pong.InstanceManager;
 
 import java.io.IOException;
 
-public class GifPlayer {
+public class HorseGIF {
 
-    public GifPlayer() {
+    public HorseGIF() {
     }
 
-    public void playHorseGif(Instance instance) throws IOException {
+    public void playHorseGif(InstanceManager instance) throws IOException {
         while (true) {
             for (int i = 0; i < 15; i++) {
 
