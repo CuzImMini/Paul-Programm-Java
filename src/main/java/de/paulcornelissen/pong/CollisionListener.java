@@ -2,6 +2,8 @@ package de.paulcornelissen.pong;
 
 import basis.Hilfe;
 
+import static de.paulcornelissen.pong.GameManager.scoreLeft;
+import static de.paulcornelissen.pong.GameManager.scoreRight;
 import static de.paulcornelissen.pong.Pong.*;
 
 public class CollisionListener {
@@ -13,30 +15,42 @@ public class CollisionListener {
     public static int checkCollision() {
         if (ball.kollisionErkanntMit(bouncePadRight)) {
             System.out.println("Collision-R");
-            Hilfe.warte(10);
 
             ball.changeDirection();
+            Hilfe.warte(25);
             return 1;
         }
         if (ball.kollisionErkanntMit(bouncePadLeft)) {
             System.out.println("Collision-L");
-            Hilfe.warte(10);
 
             ball.changeDirection();
+            Hilfe.warte(25);
             return 2;
         }
-        if (ball.getX() > 610) {
+        if (ball.getX() > 675) {
             System.out.println("Goal-at-R");
+
+            game.goalL();
+            scoreManager.refresh(scoreLeft, scoreRight);
+
             game.resetMatch();
             return 3;
         }
-        if (ball.getX() < 90 ) {
+        if (ball.getX() < 0) {
             System.out.println("Goal-at-L");
+
+            game.goalR();
+            scoreManager.refresh(scoreLeft, scoreRight);
+
             game.resetMatch();
             return 4;
         }
-        //TODO: Kollision mit oberem und unterem Rand einfügen
-        //              - Methode bounceUP/bounceDown
+        if (ball.getY() > 475 || ball.getY() < 0) {
+            System.out.println("Collision-Wall");
+
+            ball.bounce();
+            return 5;
+        }
         return 0;
     }
 

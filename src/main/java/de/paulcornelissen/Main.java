@@ -1,9 +1,10 @@
 package de.paulcornelissen;
 
-import basis.vw.Einstellungen;
-import de.paulcornelissen.daumenkino.HorseGIF;
+import de.paulcornelissen.daumenkino.GifPlayer;
 import de.paulcornelissen.daumenkino.Hampelmann;
 import de.paulcornelissen.paulpaint.Application;
+import de.paulcornelissen.paulpaint.Instance;
+import de.paulcornelissen.pong.InstanceManager;
 import de.paulcornelissen.pong.Pong;
 
 import java.io.IOException;
@@ -17,10 +18,11 @@ public class Main {
 
         //GifPlayer
         //InstanceManager instance = new InstanceManager("Pauls-Daumenkino", 600, 400, false);
-        //new HorseGIF().playHorseGif(instance);
+        //new GifPlayer().playHorseGif(instance);
 
         //Hampelmann
-        //Hampelmann hampelmann = new Hampelmann();
+        //Instance hampelmannInstance = new Instance("Pauls-Daumenkino", 400, 600, true);
+        //Hampelmann hampelmann = new Hampelmann(hampelmannInstance);
 
         //Pong
         Pong pong = new Pong();

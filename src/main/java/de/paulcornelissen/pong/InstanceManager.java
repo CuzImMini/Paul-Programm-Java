@@ -4,6 +4,8 @@ import basis.Fenster;
 import basis.MausLauscherStandard;
 import de.paulcornelissen.paulpaint.Pencil;
 
+import java.awt.*;
+
 public class InstanceManager {
 
     private final Fenster fenster;

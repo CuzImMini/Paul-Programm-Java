@@ -13,7 +13,7 @@ public class Ball extends Bild {
     private double yCord;
     boolean goal = false;
 
-    int speed = 50;
+    int speed = 40;
     PencilManager pencilManager;
 
     Double direction;
@@ -26,7 +26,7 @@ public class Ball extends Bild {
         pencilManager = pm;
 
         this.setzePosition(xCord, yCord);
-        this.setzeGroesse(25, 25);
+        this.setzeGroesse(30, 30);
 
 
         pencilManager.setObject(this).zeichneBall();
@@ -52,19 +52,15 @@ public class Ball extends Bild {
     }
 
     public void changeDirection() {
-        if (direction == 1) {
-            direction = (double) -1;
-            angle = getAngle();
-            speed--;
-            return;
-        }
-        if (direction == -1) {
-            direction = (double) 1;
-            angle = getAngle();
-            speed--;
-        }
+        direction = direction * (-1);
+        if(this.getChance()) {angle = getAngle();}
+        if (speed < 30) {return;}
+        speed = (int) (speed * 0.9);
 
+    }
 
+    public void bounce() {
+        angle = angle * (-1);
     }
 
 
@@ -103,6 +99,15 @@ public class Ball extends Bild {
         double angleInteger = random.nextDouble(0, 1);
 
         return angleInteger;
+    }
+
+    public boolean getChance() {
+
+        Random random = new Random();
+
+        boolean randB = random.nextBoolean();
+
+        return randB;
     }
 
 

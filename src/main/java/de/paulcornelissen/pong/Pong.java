@@ -7,12 +7,12 @@ import basis.TastenLauscher;
 public class Pong {
 
     static Fenster window;
-    PencilManager pencilManager;
+    static PencilManager pencilManager;
     static BouncePad bouncePadRight;
     static BouncePad bouncePadLeft;
     static Ball ball;
     static GameManager game;
-
+    static ScoreManager scoreManager;
 
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
@@ -25,6 +25,7 @@ public class Pong {
         ball = new Ball(350,250, pencilManager);
 
         game = new GameManager();
+        scoreManager = new ScoreManager();
 
     }
 
@@ -58,9 +59,9 @@ public class Pong {
         return tastenLauscher;
     }
 
+
     //TODO
-    //  - Kollisionen mit oberem und unterem Rand
-    //  - schneller werden des Spiels nach jeder Kollision
+    //  - Fehler beheben: Ball bugght in Bouncepad
 
 
 

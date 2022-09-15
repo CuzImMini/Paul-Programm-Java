@@ -2,6 +2,8 @@ package de.paulcornelissen.pong;
 
 import basis.Stift;
 
+import java.awt.*;
+
 public class PencilManager extends Stift {
 
     //Konstruktor
@@ -30,6 +32,18 @@ public class PencilManager extends Stift {
         this.dreheUm(270);
         this.bewegeUm(12.5);
         this.zeichneKreis(6);
+    }
+
+    public void zeichneSpielstand(int bplScore, int bprScore) {
+
+        this.setzeSchriftGroesse(50);;
+        this.dreheUm(270);
+        this.bewegeUm(47);
+        this.dreheUm(90);
+        this.bewegeUm(18);
+        this.schreibeText(bplScore + "   " + bprScore);
+
+
     }
 
 

@@ -15,6 +15,8 @@ public class BouncePad extends Bild {
         this.setzePosition(xCord,yCord);
         this.setzeGroesse(25,150);
 
+        this.setzeVereinfachteKollisionerkennung(true);
+
         pencilManager.setObject(this).zeichneBouncepad();
     }
 
@@ -33,7 +35,7 @@ public class BouncePad extends Bild {
 
     }
 
-    public void up() {
+    public void up()  {
         if(yCord < 0) {return;}
         moveTo(getX(),getY()-20);
     }

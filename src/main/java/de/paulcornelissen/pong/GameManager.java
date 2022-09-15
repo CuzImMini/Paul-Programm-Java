@@ -5,11 +5,12 @@ import static de.paulcornelissen.pong.Pong.*;
 public class GameManager {
 
 
-    private int scoreRight = 0;
-    private int scoreLeft = 0;
+    static int scoreRight = 0;
+    static int scoreLeft = 0;
 
     boolean gameActive;
     GameManager gameManager = this;
+    Pong pong;
 
     Thread gameListener;
 
@@ -35,8 +36,19 @@ public class GameManager {
         bouncePadRight.moveTo(bouncePadRight.getX(), 175);
 
         gameListener.stop();
+        System.out.println(scoreLeft + scoreRight);
         gameActive = false;
+        ball.speed = 1;
 
     }
 
+    public void goalR() {
+        scoreRight++;
+    }
+    public void goalL() {
+        scoreLeft++;
+    }
+
+
 }
+

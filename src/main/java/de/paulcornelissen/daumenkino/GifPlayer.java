@@ -5,9 +5,9 @@ import de.paulcornelissen.pong.InstanceManager;
 
 import java.io.IOException;
 
-public class HorseGIF {
+public class GifPlayer {
 
-    public HorseGIF() {
+    public GifPlayer() {
     }
 
     public void playHorseGif(InstanceManager instance) throws IOException {
@@ -17,6 +17,7 @@ public class HorseGIF {
                 String currentPath = new java.io.File("./repo/de/wikipedia/horse-" + i + ".png").getCanonicalPath();
                 instance.setBackgroundPhoto(currentPath);
                 Hilfe.warte(66);
+
             }
         }
     }
