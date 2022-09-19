@@ -7,7 +7,7 @@ import basis.TastenLauscher;
 public class Pong {
 
     static Fenster window;
-    static PencilManager pencilManager;
+    static PongPencilManager pongPencilManager;
     static BouncePad bouncePadRight;
     static BouncePad bouncePadLeft;
     static Ball ball;
@@ -16,13 +16,13 @@ public class Pong {
 
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
-        pencilManager = new PencilManager();
+        pongPencilManager = new PongPencilManager();
         window.setzeTastenLauscher(this.getKeyboardListener());
 
-        bouncePadLeft = new BouncePad(100, 175, pencilManager);
-        bouncePadRight = new BouncePad(600, 175, pencilManager);
+        bouncePadLeft = new BouncePad(100, 175, pongPencilManager);
+        bouncePadRight = new BouncePad(600, 175, pongPencilManager);
 
-        ball = new Ball(350,250, pencilManager);
+        ball = new Ball(350,250, pongPencilManager);
 
         game = new GameManager();
         scoreManager = new ScoreManager();

@@ -2,20 +2,18 @@ package de.paulcornelissen.pong;
 
 import basis.Stift;
 
-import java.awt.*;
-
-public class PencilManager extends Stift {
+public class PongPencilManager extends Stift {
 
     //Konstruktor
-    public PencilManager() {
+    public PongPencilManager() {
     }
 
-    public PencilManager setObject(Object object) {
+    public PongPencilManager setObject(Object object) {
         this.maleAuf(object);
         return this;
     }
 
-    public PencilManager setPosition(int x, int y, int rotation) {
+    public PongPencilManager setPosition(int x, int y, int rotation) {
         this.bewegeBis(x, y);
         this.dreheBis(rotation);
         return this;

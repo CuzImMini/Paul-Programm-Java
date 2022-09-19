@@ -14,22 +14,22 @@ public class Ball extends Bild {
     boolean goal = false;
 
     int speed = 40;
-    PencilManager pencilManager;
+    PongPencilManager pongPencilManager;
 
     Double direction;
     Double angle;
 
 
-    public Ball(int x, int y, PencilManager pm) {
+    public Ball(int x, int y, PongPencilManager pm) {
         xCord = x - 10;
         yCord = y - 10;
-        pencilManager = pm;
+        pongPencilManager = pm;
 
         this.setzePosition(xCord, yCord);
         this.setzeGroesse(30, 30);
 
 
-        pencilManager.setObject(this).zeichneBall();
+        pongPencilManager.setObject(this).zeichneBall();
     }
 
     public double getX() {

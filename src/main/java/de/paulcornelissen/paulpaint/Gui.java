@@ -14,6 +14,7 @@ public class Gui extends JFrame {
     private JComboBox<String> objectSelector;
     private JComboBox<String> widthSelector;
     private JToggleButton drawingToggle;
+
     public Gui(String title) {
         this.mainframe(title);
     }

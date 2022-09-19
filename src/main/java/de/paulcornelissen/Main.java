@@ -6,6 +6,7 @@ import de.paulcornelissen.paulpaint.Application;
 import de.paulcornelissen.paulpaint.Instance;
 import de.paulcornelissen.pong.InstanceManager;
 import de.paulcornelissen.pong.Pong;
+import de.paulcornelissen.tictactoe.TicTacToe;
 
 import java.io.IOException;
 
@@ -25,7 +26,10 @@ public class Main {
         //Hampelmann hampelmann = new Hampelmann(hampelmannInstance);
 
         //Pong
-        Pong pong = new Pong();
+        //Pong pong = new Pong();
+
+        //TicTacToe
+        TicTacToe ticTacToe = new TicTacToe();
     }
 
 }

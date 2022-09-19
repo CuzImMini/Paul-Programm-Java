@@ -6,18 +6,18 @@ public class BouncePad extends Bild {
 
     private double xCord;
     private double yCord;
-    PencilManager pencilManager;
+    PongPencilManager pongPencilManager;
 
-    public BouncePad(int x, int y, PencilManager pm) {
+    public BouncePad(int x, int y, PongPencilManager pm) {
         xCord = x;
         yCord = y;
-        pencilManager = pm;
+        pongPencilManager = pm;
         this.setzePosition(xCord,yCord);
         this.setzeGroesse(25,150);
 
         this.setzeVereinfachteKollisionerkennung(true);
 
-        pencilManager.setObject(this).zeichneBouncepad();
+        pongPencilManager.setObject(this).zeichneBouncepad();
     }
 
 
