@@ -6,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class TicTacToe extends Fenster {
 
@@ -166,6 +169,7 @@ public class TicTacToe extends Fenster {
             pencilManager.setObject(this).zeichneWinHorizont(feld[0], feld[2]);
             winTimer(feld[0]);
 
+
         } else if ((feld[0].belegt == 2 && feld[1].belegt == 2 && feld[2].belegt == 2)) {
             System.out.println("Gewinn Spieler-2 obere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[0], feld[2]);
@@ -276,14 +280,19 @@ public class TicTacToe extends Fenster {
     }
 
     private void winTimer(Feld x) {
-        Timer timer = new Timer(1250, e -> {
-            try {
-                this.win(x.belegt);
-            } catch (IOException | FontFormatException ex) {
-                throw new RuntimeException(ex);
+
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.schedule(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    win(x.belegt);
+                } catch (IOException | FontFormatException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        });
-        timer.start();
+        }, 1500, TimeUnit.MILLISECONDS);
+
     }
 
     public void win(int player) throws IOException, FontFormatException {
