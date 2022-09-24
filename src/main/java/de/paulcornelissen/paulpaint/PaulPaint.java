@@ -1,10 +1,10 @@
 package de.paulcornelissen.paulpaint;
 
-public class Application {
+public class PaulPaint {
 
     public Gui gui;
 
-    public Application(String title) {
+    public PaulPaint(String title) {
         gui = new Gui(title);
     }
 

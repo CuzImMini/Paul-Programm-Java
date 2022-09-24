@@ -9,9 +9,6 @@ public class GameManager {
     static int scoreLeft = 0;
 
     boolean gameActive;
-    GameManager gameManager = this;
-    Pong pong;
-
     Thread gameListener;
 
     public GameManager() {
@@ -21,12 +18,7 @@ public class GameManager {
     public void startMatch() {
         gameActive = true;
 
-        gameListener = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ball.movementListener(gameManager);
-            }
-        });
+        gameListener = new Thread(() -> ball.movementListener());
         gameListener.start();
     }
 
@@ -35,7 +27,7 @@ public class GameManager {
         bouncePadLeft.moveTo(bouncePadLeft.getX(), 175);
         bouncePadRight.moveTo(bouncePadRight.getX(), 175);
 
-        gameListener.stop();
+        gameListener.interrupt();
         System.out.println(scoreLeft + scoreRight);
         gameActive = false;
         ball.speed = 1;

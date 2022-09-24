@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class Instance {
+public class PaintInstanceManager {
 
     //Variabeln
     private final Fenster fenster;
@@ -17,7 +17,7 @@ public class Instance {
     private int breite;
     private int hoehe;
 
-    public Instance(String n, int b, int h, boolean summonPencil) {
+    public PaintInstanceManager(String n, int b, int h, boolean summonPencil) {
 
         breite = b;
         hoehe = h;
@@ -48,7 +48,6 @@ public class Instance {
 
                 if (objectPlacement) {
                     drawingCrawler(Objects.requireNonNull(comboBox.getSelectedItem()).toString(), i, i1, 0, getColour());
-                    return;
                 } else {
                     pencil.bewegeBis(i, i1);
                     pencil.runter();
@@ -105,14 +104,6 @@ public class Instance {
         this.fenster.loescheAlles();
     }
 
-    public void drawingCrawler(String object, int x, int y, int rotation, String color, Object objectDrawOn) {
-
-        this.pencil.setObject(objectDrawOn);
-        this.pencil.setColor(Crawler.getColor(color));
-        this.drawingCrawler(object, x, y, rotation);
-
-    }
-
     public void drawingCrawler(String object, int x, int y, int rotation, Color color, Object objectDrawOn) {
 
         this.pencil.setObject(objectDrawOn);
@@ -138,14 +129,6 @@ public class Instance {
 
     public void setBackgroundPhoto(String path) {
         fenster.ladeBildInZeichenflaeche(path);
-    }
-
-    public void drawingCrawler(String object, int x, int y, int rotation, Object objectDrawOn, Color color) {
-
-        this.pencil.setColor(color);
-        this.pencil.setObject(objectDrawOn);
-        this.drawingCrawler(object, x, y, rotation);
-
     }
 
     public void drawingCrawler(String object, int x, int y, int rotation, String color) {
@@ -195,15 +178,6 @@ public class Instance {
 
         if (object.equals("Haus")) {
             this.pencil.zeichneHaus();
-        }
-        if (object.equals("Hampelmann-unten")) {
-            this.pencil.zeichneHampelmannUnten();
-        }
-        if (object.equals("Hampelmann-mitte")) {
-            this.pencil.zeichneHampelmannMitte();
-        }
-        if (object.equals("Hampelmann-oben")) {
-            this.pencil.zeichneHampelmannOben();
         }
 
     }

@@ -2,18 +2,16 @@ package de.paulcornelissen;
 
 import de.paulcornelissen.daumenkino.GifPlayer;
 import de.paulcornelissen.daumenkino.Hampelmann;
-import de.paulcornelissen.paulpaint.Application;
+import de.paulcornelissen.paulpaint.PaulPaint;
 import de.paulcornelissen.pong.Pong;
 import de.paulcornelissen.tictactoe.TicTacToe;
 
-import java.io.IOException;
-
 public class Main {
 
-    public static void main(String[] s) throws IOException {
+    public static void main(String[] s) {
 
         //Paul-Paint
-        //Application paulPaint = new Application("Paul-Paint");
+        //new PaulPaint("Paul-Paint");
 
         //GifPlayer
         //new GifPlayer().playHorseGif();
@@ -22,13 +20,15 @@ public class Main {
         //new Hampelmann().animation();
 
         //Pong
-        //Pong pong = new Pong();
+       new Pong();
 
         //TicTacToe
-        TicTacToe ticTacToe = new TicTacToe();
+        //new TicTacToe();
+
+        //Kniffel
+        //Kniffel kniffel = new Kniffel();
 
     }
-
 
 
 }

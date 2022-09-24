@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Gui extends JFrame {
 
-    public Instance instance;
+    public PaintInstanceManager paintInstanceManager;
     JComboBox<String> colorSelector;
     String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
     private JComboBox<String> objectSelector;
@@ -43,10 +43,10 @@ public class Gui extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                if (instance == null) {
+                if (paintInstanceManager == null) {
                     return;
                 }
-                instance.closeInstance();
+                paintInstanceManager.closeInstance();
             }
         });
 
@@ -66,20 +66,20 @@ public class Gui extends JFrame {
         colorSelector = new JComboBox<>(color);
         colorSelector.setSelectedItem(color[12]);
         colorSelector.addActionListener(e -> {
-            if (instance == null) {
+            if (paintInstanceManager == null) {
                 return;
             }
-            instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
+            paintInstanceManager.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
         });
 
         //Breiten-Selektor
         widthSelector = new JComboBox<>(breiten);
         widthSelector.setSelectedItem(breiten[1]);
         widthSelector.addActionListener(e -> {
-            if (instance == null) {
+            if (paintInstanceManager == null) {
                 return;
             }
-            instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
+            paintInstanceManager.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
         });
 
         //startConstructor
@@ -127,7 +127,7 @@ public class Gui extends JFrame {
 
 
     public void changeWindowDialog() {
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
         JTextField neueBreite = new JTextField(5);
@@ -140,14 +140,14 @@ public class Gui extends JFrame {
         mypanel4.add(new JLabel("Neue breite:"));
         mypanel4.add(neueBreite);
         mypanel4.add(Box.createHorizontalStrut(20));
-        mypanel4.add(new JLabel("alte Höhe:  " + instance.getHoehe()));
+        mypanel4.add(new JLabel("alte Höhe:  " + paintInstanceManager.getHoehe()));
         mypanel4.add(Box.createHorizontalStrut(10));
-        mypanel4.add(new JLabel("alte Breite:  " + instance.getBreite()));
+        mypanel4.add(new JLabel("alte Breite:  " + paintInstanceManager.getBreite()));
 
         int result4 = JOptionPane.showConfirmDialog(null, mypanel4, "Bitte neue Dimensionen wählen", JOptionPane.OK_CANCEL_OPTION);
 
         if (result4 == JOptionPane.OK_OPTION && !neueHoehe.getText().equals("") && !neueBreite.getText().equals("")) {
-            instance.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
+            paintInstanceManager.setFenster(Integer.parseInt(neueHoehe.getText()), Integer.parseInt(neueBreite.getText()));
 
         } else {
             JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
@@ -155,7 +155,7 @@ public class Gui extends JFrame {
 
     }
 
-    public Instance startConstuctor() {
+    public void startConstuctor() {
         //Fenster-Dialog
         JTextField breite = new JTextField(5);
         JTextField hoehe = new JTextField(5);
@@ -175,16 +175,16 @@ public class Gui extends JFrame {
         myPanel.add(new JLabel("Stift erzeugen?"));
         myPanel.add(summonPencil);
 
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             int result = JOptionPane.showConfirmDialog(null, myPanel, "Bitte Größe und Name wählen.", JOptionPane.OK_CANCEL_OPTION);
 
             if (result == JOptionPane.OK_OPTION && !breite.getText().equals("") && !hoehe.getText().equals("") && !name.getText().equals("")) {
-                Thread t = new Thread(() -> instance = new Instance(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
+                Thread t = new Thread(() -> paintInstanceManager = new PaintInstanceManager(name.getText(), Integer.parseInt(breite.getText()), Integer.parseInt(hoehe.getText()), summonPencil.isSelected()));
                 t.start();
-                return instance;
+                return;
             }
             if (result == JOptionPane.CANCEL_OPTION) {
-                return instance;
+                return;
             }
             {
                 JOptionPane.showMessageDialog(null, "Bitte alle Felder ausfüllen.");
@@ -192,34 +192,32 @@ public class Gui extends JFrame {
         } else {
             changeWindowDialog();
         }
-        return instance;
     }
 
-    public Instance fastStart() {
-        if (instance == null) {
-            Thread t = new Thread(() -> instance = new Instance("Zeichenfläche", 600, 600, true));
+    public void fastStart() {
+        if (paintInstanceManager == null) {
+            Thread t = new Thread(() -> paintInstanceManager = new PaintInstanceManager("Zeichenfläche", 600, 600, true));
             t.start();
         } else {
             changeWindowDialog();
         }
-        return instance;
     }
 
     public void resetAll() {
 
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
-        instance.reset();
-        instance.getPencil().bewegeBis(0, 0);
-        instance.setBackgroundColor(Crawler.getColor("Weiß"));
+        paintInstanceManager.reset();
+        paintInstanceManager.getPencil().bewegeBis(0, 0);
+        paintInstanceManager.setBackgroundColor(Crawler.getColor("Weiß"));
     }
 
     public void drawingToggle() {
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
-        if (instance.checkPencil()) {
+        if (paintInstanceManager.checkPencil()) {
 
             if (drawingToggle.isSelected()) {
 
@@ -233,12 +231,12 @@ public class Gui extends JFrame {
                 int result3 = JOptionPane.showOptionDialog(null, "Objekte platzieren oder zeichnen?", "Bitte wählen", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
                 placeObjects = result3 == 1;
 
-                instance.addPaintingListener(objectSelector, placeObjects);
-                instance.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
-                instance.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
+                paintInstanceManager.addPaintingListener(objectSelector, placeObjects);
+                paintInstanceManager.getPencil().setzeFarbe(Crawler.getColor(Objects.requireNonNull(colorSelector.getSelectedItem()).toString()));
+                paintInstanceManager.getPencil().setzeLinienBreite(Crawler.getWidth(Objects.requireNonNull(widthSelector.getSelectedItem()).toString()));
                 return;
             }
-            instance.removePaintingListener();
+            paintInstanceManager.removePaintingListener();
         } else {
             JOptionPane.showMessageDialog(null, "Kein Stift vorhanden! Erzeuge zuerst einen Stift.");
             drawingToggle.setSelected(false);
@@ -247,7 +245,7 @@ public class Gui extends JFrame {
 
     public void setBackground() {
 
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
         //Setze Dialog
@@ -278,7 +276,7 @@ public class Gui extends JFrame {
 
                 int result2 = JOptionPane.showConfirmDialog(null, myPanel2, "Bitte Farbwerte eingeben", JOptionPane.OK_CANCEL_OPTION);
                 if (result2 == JOptionPane.OK_OPTION && !rValue.getText().equals("") && !gValue.getText().equals("") && !bValue.getText().equals("")) {
-                    instance.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
+                    paintInstanceManager.setBackgroundColor(Crawler.getColor(Integer.parseInt(rValue.getText()), Integer.parseInt(gValue.getText()), Integer.parseInt(bValue.getText())));
                 }
                 if (result2 == JOptionPane.CANCEL_OPTION) {
                     return;
@@ -287,25 +285,25 @@ public class Gui extends JFrame {
                 return;
             }
 
-            instance.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
+            paintInstanceManager.setBackgroundColor(Crawler.getColor(colorBox.getSelectedItem().toString()));
         }
     }
 
     public void summonPencil() {
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
-        if (instance.checkPencil()) {
+        if (paintInstanceManager.checkPencil()) {
             return;
         }
-        instance.createPencil();
+        paintInstanceManager.createPencil();
     }
 
     public void drawManually() {
-        if (instance == null) {
+        if (paintInstanceManager == null) {
             return;
         }
-        if (instance.checkPencil()) {
+        if (paintInstanceManager.checkPencil()) {
             String malObjekt = Objects.requireNonNull(objectSelector.getSelectedItem()).toString();
 
             //Dialog
@@ -332,7 +330,7 @@ public class Gui extends JFrame {
                 if (rotationCord.getText().equals("")) {
                     rotationCord.setText("0");
                 }
-                instance.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
+                paintInstanceManager.drawingCrawler(malObjekt, Integer.parseInt(xCord.getText()), Integer.parseInt(yCord.getText()), Integer.parseInt(rotationCord.getText()), Objects.requireNonNull(colorSelector.getSelectedItem()).toString());
                 return;
             }
             if (result == JOptionPane.CANCEL_OPTION) {

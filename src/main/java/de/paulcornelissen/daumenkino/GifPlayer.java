@@ -1,29 +1,40 @@
 package de.paulcornelissen.daumenkino;
 
 import basis.Hilfe;
-import de.paulcornelissen.paulpaint.Instance;
-import de.paulcornelissen.pong.InstanceManager;
 
 import java.io.IOException;
 
 public class GifPlayer {
 
-    Instance instance;
+private DaumenkinoInstanceManager instance;
+
     public GifPlayer() {
-        this.instance = new Instance("Pauls-GifPlayer", 600, 400, false);
+        this.instance = new DaumenkinoInstanceManager("GifPlayer", 600, 400, false);
 
     }
 
-    public void playHorseGif() throws IOException {
-        while (true) {
-            for (int i = 0; i < 15; i++) {
+    public void playHorseGif() {
 
-                String currentPath = new java.io.File("./repo/de/wikipedia/horse-" + i + ".png").getCanonicalPath();
-                instance.setBackgroundPhoto(currentPath);
-                Hilfe.warte(66);
+        Thread t = new Thread(() -> {
+            while (true) {
+                try {
+                    for (int i = 0; i < 15; i++) {
+
+                        instance.setBackgroundPhoto(new java.io.File("./repo/de/wikipedia/horse-" + i + ".png").getCanonicalPath());
+                        Hilfe.warte(66);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
 
             }
-        }
+        });
+        t.start();
+
+
+
     }
 
 }

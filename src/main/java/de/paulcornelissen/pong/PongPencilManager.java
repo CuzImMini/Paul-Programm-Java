@@ -34,7 +34,7 @@ public class PongPencilManager extends Stift {
 
     public void zeichneSpielstand(int bplScore, int bprScore) {
 
-        this.setzeSchriftGroesse(50);;
+        this.setzeSchriftGroesse(50);
         this.dreheUm(270);
         this.bewegeUm(47);
         this.dreheUm(90);

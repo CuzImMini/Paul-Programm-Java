@@ -17,14 +17,12 @@ public class CollisionListener {
             System.out.println("Collision-R");
 
             ball.changeDirection();
-            Hilfe.warte(25);
             return 1;
         }
         if (ball.kollisionErkanntMit(bouncePadLeft)) {
             System.out.println("Collision-L");
 
             ball.changeDirection();
-            Hilfe.warte(25);
             return 2;
         }
         if (ball.getX() > 675) {

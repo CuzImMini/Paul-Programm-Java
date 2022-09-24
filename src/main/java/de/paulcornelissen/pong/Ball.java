@@ -5,7 +5,7 @@ import basis.Hilfe;
 
 import java.util.Random;
 
-import static de.paulcornelissen.pong.Pong.game;
+import static de.paulcornelissen.pong.Pong.*;
 
 public class Ball extends Bild {
 
@@ -40,7 +40,7 @@ public class Ball extends Bild {
         return yCord;
     }
 
-    public void movementListener(GameManager gameManager) {
+    public void movementListener() {
         //Direction 1 = rechts
         //Direction -1 = links
         //angle 1 = 45 Grad Winkel
@@ -60,11 +60,12 @@ public class Ball extends Bild {
     }
 
     public void bounce() {
-        angle = angle * (-1);
+        this.angle = angle * (-1);
     }
 
 
     public void move() {
+
         while (game.gameActive) {
             moveTo(getX() + 2.5 * direction - (1.25 * angle), getY() + (angle * 1.25));
             Hilfe.warte(speed);
@@ -96,18 +97,14 @@ public class Ball extends Bild {
 
         Random random = new Random();
 
-        double angleInteger = random.nextDouble(0, 1);
-
-        return angleInteger;
+        return random.nextDouble(0, 1);
     }
 
     public boolean getChance() {
 
         Random random = new Random();
 
-        boolean randB = random.nextBoolean();
-
-        return randB;
+        return random.nextBoolean();
     }
 
 

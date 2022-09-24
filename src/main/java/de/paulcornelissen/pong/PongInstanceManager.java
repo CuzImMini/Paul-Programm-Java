@@ -4,26 +4,19 @@ import basis.Fenster;
 import basis.MausLauscherStandard;
 import de.paulcornelissen.paulpaint.Pencil;
 
-import java.awt.*;
-
-public class InstanceManager {
+public class PongInstanceManager {
 
     private final Fenster fenster;
     public String name;
     public MausLauscherStandard paintListener;
-    private Pencil pencil;
-    private int breite;
-    private int hoehe;
 
-    public InstanceManager(String n, int b, int h, boolean summonPencil) {
+    public PongInstanceManager(String n, int b, int h, boolean summonPencil) {
 
-        breite = b;
-        hoehe = h;
         name = n;
-        fenster = new Fenster(name, breite, hoehe);
+        fenster = new Fenster(name, b, h);
 
         if (summonPencil) {
-            pencil = new Pencil();
+            Pencil pencil = new Pencil();
         }
     }
 

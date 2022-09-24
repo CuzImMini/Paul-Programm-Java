@@ -35,7 +35,7 @@ public class Crawler {
             return fetchedColor;
         }
         if (color.equals("Grün")) {
-            fetchedColor = Farbe.GRÜN;
+            fetchedColor = Color.GREEN;
             return fetchedColor;
         }
         if (color.equals("Hellgrau")) {

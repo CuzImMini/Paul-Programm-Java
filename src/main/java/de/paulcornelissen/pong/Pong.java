@@ -1,7 +1,6 @@
 package de.paulcornelissen.pong;
 
 import basis.Fenster;
-import basis.Komponente;
 import basis.TastenLauscher;
 
 public class Pong {
@@ -16,6 +15,7 @@ public class Pong {
 
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
+        window.getMeinJFrame().setLocationRelativeTo(null);
         pongPencilManager = new PongPencilManager();
         window.setzeTastenLauscher(this.getKeyboardListener());
 
@@ -30,33 +30,28 @@ public class Pong {
     }
 
     public TastenLauscher getKeyboardListener() {
-        TastenLauscher tastenLauscher = new TastenLauscher() {
-
-            @Override
-            public void bearbeiteTaste(Komponente komponente, char c) {
-                if (c == 'k') {
-                    bouncePadRight.down();
-                }
-                if (c == 'i') {
-                    bouncePadRight.up();
-                }
-                if (c == 'd') {
-                    bouncePadLeft.down();
-                }
-                if (c == 'e') {
-                    bouncePadLeft.up();
-                }
-                if (c == 'g') {
-                    game.startMatch();
-                }
-                if (c == 'q') {
-                    game.resetMatch();
-                }
-
-
+        return (komponente, c) -> {
+            if (c == 'k') {
+                bouncePadRight.down();
             }
+            if (c == 'i') {
+                bouncePadRight.up();
+            }
+            if (c == 'd') {
+                bouncePadLeft.down();
+            }
+            if (c == 'e') {
+                bouncePadLeft.up();
+            }
+            if (c == 'g') {
+                game.startMatch();
+            }
+            if (c == 'q') {
+                game.resetMatch();
+            }
+
+
         };
-        return tastenLauscher;
     }
 
 

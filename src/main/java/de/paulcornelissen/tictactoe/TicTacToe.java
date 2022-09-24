@@ -3,8 +3,6 @@ package de.paulcornelissen.tictactoe;
 import basis.*;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,15 +19,16 @@ public class TicTacToe extends Fenster {
     JFrame jFrame = this.getMeinJFrame();
 
     public TicTacToe() {
-        this.getMeinJFrame().setVisible(false);
+        jFrame.setVisible(false);
         this.setzeGroesse(620, 620);
         this.setzeTitel("Paul-TicTacToe");
         this.setzeTastenLauscher(this.getKeyboardListener());
         this.setzeMausLauscherStandard(this.getMouseListener());
 
         pencilManager = new TicTacToePencilManager();
-        this.getMeinJFrame().setLocationRelativeTo(null);
-        this.getMeinJFrame().setVisible(true);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setVisible(true);
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.initialize();
     }
@@ -54,11 +53,7 @@ public class TicTacToe extends Fenster {
         return new MausLauscherStandard() {
             @Override
             public void bearbeiteMausDruck(Object o, int i, int i1) {
-                try {
-                    setPlayer(i, i1);
-                } catch (IOException | FontFormatException e) {
-                    throw new RuntimeException(e);
-                }
+                setPlayer(i, i1);
             }
 
             @Override
@@ -89,25 +84,17 @@ public class TicTacToe extends Fenster {
     }
 
     public TastenLauscher getKeyboardListener() {
-        return new TastenLauscher() {
-            @Override
-            public void bearbeiteTaste(Komponente komponente, char c) {
-                if (c == 'r') {
-                    jFrame.setVisible(false);
-                    Thread t = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new TicTacToe();
-                        }
-                    });
-                    t.start();
-                }
+        return (komponente, c) -> {
+            if (c == 'r') {
+                jFrame.setVisible(false);
+                Thread t = new Thread(TicTacToe::new);
+                t.start();
             }
         };
     }
 
 
-    public void setPlayer(int x, int y) throws IOException, FontFormatException {
+    public void setPlayer(int x, int y) {
         if (!(crawlClick(x, y).belegt == 90)) {
             return;
         }
@@ -161,41 +148,35 @@ public class TicTacToe extends Fenster {
 
     }
 
-    public void checkWin() throws IOException, FontFormatException {
+    public void checkWin() {
         //HORIZONTALE REIHEN
         //obere Reihe
         if ((feld[0].belegt == 1 && feld[1].belegt == 1 && feld[2].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 obere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[0], feld[2]);
             winTimer(feld[0]);
 
 
         } else if ((feld[0].belegt == 2 && feld[1].belegt == 2 && feld[2].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 obere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[0], feld[2]);
             winTimer(feld[0]);
         }
         //mittlere Reihe
         else if ((feld[3].belegt == 1 && feld[4].belegt == 1 && feld[5].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 mittlere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[3], feld[5]);
             winTimer(feld[3]);
 
         } else if ((feld[3].belegt == 2 && feld[4].belegt == 2 && feld[5].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 mittlere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[3], feld[5]);
             winTimer(feld[3]);
 
         }
         //untere Reihe
         else if ((feld[6].belegt == 1 && feld[7].belegt == 1 && feld[8].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 untere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[6], feld[8]);
             winTimer(feld[6]);
 
 
         } else if ((feld[6].belegt == 2 && feld[7].belegt == 2 && feld[8].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 untere Reihe");
             pencilManager.setObject(this).zeichneWinHorizont(feld[6], feld[8]);
             winTimer(feld[6]);
 
@@ -203,13 +184,11 @@ public class TicTacToe extends Fenster {
         //VERTIKALE REIHEN
         //linke Reihe
         else if ((feld[0].belegt == 1 && feld[3].belegt == 1 && feld[6].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 linke Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[0], feld[6]);
             winTimer(feld[0]);
 
 
         } else if ((feld[0].belegt == 2 && feld[3].belegt == 2 && feld[6].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 linke Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[0], feld[6]);
             winTimer(feld[0]);
 
@@ -217,13 +196,11 @@ public class TicTacToe extends Fenster {
         }
         //mittlere Reihe
         else if ((feld[1].belegt == 1 && feld[4].belegt == 1 && feld[7].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 mittlere Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[1]);
 
 
         } else if ((feld[1].belegt == 2 && feld[4].belegt == 2 && feld[7].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 mittlere Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[1]);
 
@@ -231,13 +208,11 @@ public class TicTacToe extends Fenster {
         }
         //rechte Reihe
         else if ((feld[2].belegt == 1 && feld[5].belegt == 1 && feld[8].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 rechte Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[2]);
 
 
         } else if ((feld[2].belegt == 2 && feld[5].belegt == 2 && feld[8].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 rechte Reihe");
             pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[2]);
 
@@ -246,24 +221,20 @@ public class TicTacToe extends Fenster {
         //QUERE-Reihen
         //oben-links bis unten-rechts Reihe
         else if ((feld[0].belegt == 1 && feld[4].belegt == 1 && feld[8].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 quere Reihe");
             pencilManager.setObject(this).zeichneWinQuerL(feld[0], feld[8]);
             winTimer(feld[0]);
 
         } else if ((feld[0].belegt == 2 && feld[4].belegt == 2 && feld[8].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 quere Reihe");
             pencilManager.setObject(this).zeichneWinQuerL(feld[0], feld[8]);
             winTimer(feld[0]);
 
         }
         //oben-rechts bis unten-links
         else if ((feld[2].belegt == 1 && feld[4].belegt == 1 && feld[6].belegt == 1)) {
-            System.out.println("Gewinn Spieler-1 quere Reihe");
             pencilManager.setObject(this).zeichneWinQuerR(feld[2], feld[6]);
             winTimer(feld[2]);
 
         } else if ((feld[2].belegt == 2 && feld[4].belegt == 2 && feld[6].belegt == 2)) {
-            System.out.println("Gewinn Spieler-2 quere Reihe");
             pencilManager.setObject(this).zeichneWinQuerR(feld[2], feld[6]);
             winTimer(feld[2]);
 
@@ -282,20 +253,11 @@ public class TicTacToe extends Fenster {
     private void winTimer(Feld x) {
 
         ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        exec.schedule(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    win(x.belegt);
-                } catch (IOException | FontFormatException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }, 1500, TimeUnit.MILLISECONDS);
+        exec.schedule(() -> win(x.belegt), 1500, TimeUnit.MILLISECONDS);
 
     }
 
-    public void win(int player) throws IOException, FontFormatException {
+    public void win(int player) {
 
         this.loescheAlles();
         for (int i = 0; i < 9; i++) {

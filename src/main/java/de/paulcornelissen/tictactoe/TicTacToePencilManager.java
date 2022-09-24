@@ -16,12 +16,6 @@ public class TicTacToePencilManager extends Stift {
         return this;
     }
 
-    public TicTacToePencilManager setPosition(int x, int y, int rotation) {
-        this.bewegeBis(x, y);
-        this.dreheBis(rotation);
-        return this;
-    }
-
     public void zeichneRaster() {
         this.setzeLinienBreite(3);
 
@@ -128,38 +122,27 @@ public class TicTacToePencilManager extends Stift {
         this.setzeFarbe(Color.black);
     }
 
-    public void zeichneWinPlayer(int player) throws IOException, FontFormatException {
+    public void zeichneWinPlayer(int player) {
         this.dreheBis(0);
         this.bewegeUm(30);
-        this.dreheUm(270);
-        this.bewegeUm(40);
-        this.setzeFarbe(Color.orange);
-
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("./repo/de/fonts/BungeeSpice.ttf")).deriveFont(30);
-        this.setzeSchriftArt(font);
-        this.setzeSchriftGroesse(30);
+        zeichneHelper();
 
         this.schreibeText("Sieg für");
         this.bewegeUm(-120);
         this.dreheUm(270);
         this.bewegeUm(45);
         if (player == 1) {
-        this.schreibeText("Spieler O");}
-        else if (player == 2) {
-            this.schreibeText("Spieler X");}
+            this.schreibeText("Spieler O");
+        } else if (player == 2) {
+            this.schreibeText("Spieler X");
+        }
 
     }
 
-    public void zeichneUnentschieden() throws IOException, FontFormatException {
+    public void zeichneUnentschieden() {
         this.dreheBis(0);
         this.bewegeUm(50);
-        this.dreheUm(270);
-        this.bewegeUm(40);
-        this.setzeFarbe(Color.orange);
-
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("./repo/de/fonts/BungeeSpice.ttf")).deriveFont(30);
-        this.setzeSchriftArt(font);
-        this.setzeSchriftGroesse(30);
+        zeichneHelper();
 
         this.schreibeText("Kein");
         this.bewegeUm(-100);
@@ -168,13 +151,34 @@ public class TicTacToePencilManager extends Stift {
         this.schreibeText("Gewinner");
     }
 
-    public void rForReset() throws IOException, FontFormatException {
+    private void zeichneHelper() {
+        this.dreheUm(270);
+        this.bewegeUm(40);
+        this.setzeFarbe(Color.orange);
+
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("./repo/de/fonts/BungeeSpice.ttf")).deriveFont(Font.PLAIN, 30);
+            this.setzeSchriftArt(font);
+        } catch (IOException | FontFormatException e) {
+            System.out.println("Fehler");
+        }
+
+
+        this.setzeSchriftGroesse(30);
+    }
+
+    public void rForReset() {
         this.bewegeUm(15);
         this.dreheUm(270);
         this.bewegeUm(50);
 
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("./repo/de/fonts/BungeeSpice.ttf")).deriveFont(15);
-        this.setzeSchriftArt(font);
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("./repo/de/fonts/BungeeSpice.ttf")).deriveFont(Font.PLAIN, 15);
+            this.setzeSchriftArt(font);
+        } catch (IOException | FontFormatException e) {
+            System.out.println("Fehler");
+        }
+
         this.setzeSchriftGroesse(15);
 
         this.schreibeText("Drücke R zum Reset!");
