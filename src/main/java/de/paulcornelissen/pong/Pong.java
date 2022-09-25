@@ -3,6 +3,8 @@ package de.paulcornelissen.pong;
 import basis.Fenster;
 import basis.TastenLauscher;
 
+import javax.swing.*;
+
 public class Pong {
 
     static Fenster window;
@@ -16,6 +18,7 @@ public class Pong {
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
         window.getMeinJFrame().setLocationRelativeTo(null);
+        window.getMeinJFrame().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         pongPencilManager = new PongPencilManager();
         window.setzeTastenLauscher(this.getKeyboardListener());
 

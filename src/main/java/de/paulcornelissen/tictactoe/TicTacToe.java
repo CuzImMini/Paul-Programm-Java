@@ -28,7 +28,7 @@ public class TicTacToe extends Fenster {
         pencilManager = new TicTacToePencilManager();
         jFrame.setLocationRelativeTo(null);
         jFrame.setVisible(true);
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         this.initialize();
     }

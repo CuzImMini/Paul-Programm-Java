@@ -20,6 +20,7 @@ public class Hampelmann {
         b1.setzeHintergrundFarbe(Crawler.getColor("Weiß"));
         b2.setzeHintergrundFarbe(Crawler.getColor("Weiß"));
         b3.setzeHintergrundFarbe(Crawler.getColor("Weiß"));
+        this.animation();
     }
 
 

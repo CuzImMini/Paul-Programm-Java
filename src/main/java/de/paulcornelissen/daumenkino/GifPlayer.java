@@ -10,7 +10,7 @@ private DaumenkinoInstanceManager instance;
 
     public GifPlayer() {
         this.instance = new DaumenkinoInstanceManager("GifPlayer", 600, 400, false);
-
+        this.playHorseGif();
     }
 
     public void playHorseGif() {

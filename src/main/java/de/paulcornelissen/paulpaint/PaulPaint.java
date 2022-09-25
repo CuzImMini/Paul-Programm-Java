@@ -8,4 +8,6 @@ public class PaulPaint {
         gui = new Gui(title);
     }
 
+    public PaulPaint() {
+    }
 }

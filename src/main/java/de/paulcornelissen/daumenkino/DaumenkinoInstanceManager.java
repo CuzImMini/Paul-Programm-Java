@@ -4,6 +4,7 @@ import basis.Fenster;
 import basis.Stift;
 import de.paulcornelissen.paulpaint.Pencil;
 
+import javax.swing.*;
 import java.awt.Color;
 
 public class DaumenkinoInstanceManager {
@@ -14,6 +15,7 @@ public class DaumenkinoInstanceManager {
     public DaumenkinoInstanceManager(String n, int b, int h, boolean summonPencil) {
 
         fenster = new Fenster(n, b, h);
+        fenster.getMeinJFrame().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         if (summonPencil) {
             pencil = new Stift();
