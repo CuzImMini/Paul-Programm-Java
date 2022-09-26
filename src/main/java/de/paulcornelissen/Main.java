@@ -13,6 +13,7 @@ public class Main {
     }
 
     //TODO: Pong: Methode(kollision erkannt mit) selber schreiben
+    //TODO: TicTacToe ResetBug beheben
     //TODO: Kniffel Grundaufbau
 
 
