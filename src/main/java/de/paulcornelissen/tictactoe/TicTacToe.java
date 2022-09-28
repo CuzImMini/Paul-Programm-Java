@@ -208,12 +208,12 @@ public class TicTacToe extends Fenster {
         }
         //rechte Reihe
         else if ((feld[2].belegt == 1 && feld[5].belegt == 1 && feld[8].belegt == 1)) {
-            pencilManager.setObject(this).zeichneWinVertikal(feld[2], feld[8]);
+            pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[2]);
 
 
         } else if ((feld[2].belegt == 2 && feld[5].belegt == 2 && feld[8].belegt == 2)) {
-            pencilManager.setObject(this).zeichneWinVertikal(feld[2], feld[8]);
+            pencilManager.setObject(this).zeichneWinVertikal(feld[1], feld[7]);
             winTimer(feld[2]);
 
 

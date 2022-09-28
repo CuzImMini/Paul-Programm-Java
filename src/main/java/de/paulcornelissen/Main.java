@@ -1,6 +1,4 @@
 package de.paulcornelissen;
-
-
 public class Main {
 
     public static void main(String[] s) {
@@ -9,6 +7,5 @@ public class Main {
 
     }
 
-    //TODO: TicTacToe ResetBug beheben
 
 }
