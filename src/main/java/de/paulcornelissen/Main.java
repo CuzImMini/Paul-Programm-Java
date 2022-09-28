@@ -7,5 +7,8 @@ public class Main {
 
     }
 
+    //TODO: TicTacToe Bug
+    // - SysOut entfernen bei Pong
+    // - Pong auf Best of 5 umstellen (3 Siege für Gewinn)
 
 }
