@@ -162,8 +162,6 @@ public class TicTacToePencilManager extends Stift {
         } catch (IOException | FontFormatException e) {
             System.out.println("Fehler");
         }
-
-
         this.setzeSchriftGroesse(30);
     }
 

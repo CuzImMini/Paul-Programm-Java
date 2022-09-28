@@ -8,12 +8,12 @@ public class BouncePad extends Bild {
     private double yCord;
     PongPencilManager pongPencilManager;
 
-    public BouncePad(int x, int y, PongPencilManager pm) {
+    public BouncePad(int x, int y, Pong pong) {
         xCord = x;
         yCord = y;
-        pongPencilManager = pm;
-        this.setzePosition(xCord,yCord);
-        this.setzeGroesse(25,150);
+        pongPencilManager = pong.getPongPencilManager();
+        this.setzePosition(xCord, yCord);
+        this.setzeGroesse(25, 150);
 
         this.setzeVereinfachteKollisionerkennung(true);
 
@@ -35,15 +35,21 @@ public class BouncePad extends Bild {
 
     }
 
-    public void up()  {
-        if(yCord < 0) {return;}
-        moveTo(getX(),getY()-20);
+    public void up() {
+        if (yCord < 0) {
+            return;
+        }
+        moveTo(getX(), getY() - 20);
     }
+
     public void moveTo(double x, double y) {
-        this.setzePosition(x,y);
+        this.setzePosition(x, y);
         xCord = x;
         yCord = y;
-        CollisionListener.checkCollision();
+    }
+
+    public void clear() {
+        this.setzeSichtbar(false);
     }
 
 }

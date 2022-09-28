@@ -3,14 +3,15 @@ package de.paulcornelissen.pong;
 import basis.Bild;
 import de.paulcornelissen.paulpaint.Crawler;
 
-import static de.paulcornelissen.pong.Pong.pongPencilManager;
-
 public class ScoreManager extends Bild {
 
-    public ScoreManager() {
+    private PongPencilManager pongPencilManager;
+
+    public ScoreManager(Pong pong) {
         this.setzePosition(280, 75);
         this.setzeHintergrundFarbe(Crawler.getColor("Hellgrau"));
         this.setzeGroesse(150, 60);
+        pongPencilManager = pong.getPongPencilManager();
         pongPencilManager.setObject(this).zeichneSpielstand(0, 0);
     }
 
@@ -23,6 +24,10 @@ public class ScoreManager extends Bild {
     public void reset() {
         this.loescheAlles();
         this.setzeHintergrundFarbe(Crawler.getColor("Hellgrau"));
+    }
+
+    public void clear() {
+        this.setzeSichtbar(false);
     }
 
 }

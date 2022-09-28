@@ -2,7 +2,6 @@ package de.paulcornelissen;
 
 import de.paulcornelissen.daumenkino.GifPlayer;
 import de.paulcornelissen.daumenkino.Hampelmann;
-import de.paulcornelissen.kniffel.Kniffel;
 import de.paulcornelissen.paulpaint.PaulPaint;
 import de.paulcornelissen.pong.Pong;
 import de.paulcornelissen.tictactoe.TicTacToe;
@@ -11,7 +10,7 @@ import javax.swing.*;
 
 public class MainGui extends JFrame {
     private JButton startHampelmann;
-    private JButton startKniffel;
+    private JButton startVierGewinnt;
     private JButton startPaulPaint;
     private JButton startHorseGif;
     private JButton startTictacToe;
@@ -35,9 +34,9 @@ public class MainGui extends JFrame {
             Thread hampelmannThread = new Thread(Hampelmann::new);
             hampelmannThread.start();
         });
-        startKniffel.addActionListener(e -> {
-            Thread kniffelThread = new Thread(Kniffel::new);
-            kniffelThread.start();
+        startVierGewinnt.addActionListener(e -> {
+            Thread vierGThrad = new Thread(() -> System.out.println("Vier Gewinnt"));
+            vierGThrad.start();
         });
         startPaulPaint.addActionListener(e -> {
             Thread paulPaintThread = new Thread(() -> {

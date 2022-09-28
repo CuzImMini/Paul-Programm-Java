@@ -1,27 +1,35 @@
 package de.paulcornelissen.pong;
 
-import basis.Hilfe;
-
-import static de.paulcornelissen.pong.GameManager.scoreLeft;
-import static de.paulcornelissen.pong.GameManager.scoreRight;
-import static de.paulcornelissen.pong.Pong.*;
-
 public class CollisionListener {
 
+    private final BouncePad bouncePadLeft;
+    private final BouncePad bouncePadRight;
+    private final Ball ball;
+    private final GameManager game;
+    private final GameManager gameManager;
+    private Pong pong;
 
-    public CollisionListener() {
+    public CollisionListener(Pong pong) {
+        bouncePadLeft = pong.getBouncePadLeft();
+        bouncePadRight = pong.getBouncePadRight();
+        ball = pong.getBall();
+        game = pong.getGameManager();
+        gameManager = pong.getGameManager();
+        this.pong = pong;
     }
 
-    public static int checkCollision() {
-        if (ball.kollisionErkanntMit(bouncePadRight)) {
+    public int checkCollision() {
+        if (ball.getX() >= 580 && (ball.getY() - bouncePadRight.getY()) < 150 && (ball.getY() - bouncePadRight.getY()) > 0 && !ball.rightCollision) {
             System.out.println("Collision-R");
 
+            ball.rightCollision = true;
             ball.changeDirection();
             return 1;
         }
-        if (ball.kollisionErkanntMit(bouncePadLeft)) {
+        if (ball.getX() <= 120 && (ball.getY() - bouncePadLeft.getY()) < 150 && (ball.getY() - bouncePadLeft.getY()) > 0 && ball.rightCollision) {
             System.out.println("Collision-L");
 
+            ball.rightCollision = false;
             ball.changeDirection();
             return 2;
         }
@@ -29,7 +37,7 @@ public class CollisionListener {
             System.out.println("Goal-at-R");
 
             game.goalL();
-            scoreManager.refresh(scoreLeft, scoreRight);
+            pong.getScoreManager().refresh(gameManager.scoreLeft, gameManager.scoreRight);
 
             game.resetMatch();
             return 3;
@@ -38,7 +46,7 @@ public class CollisionListener {
             System.out.println("Goal-at-L");
 
             game.goalR();
-            scoreManager.refresh(scoreLeft, scoreRight);
+            pong.getScoreManager().refresh(gameManager.scoreLeft, gameManager.scoreRight);
 
             game.resetMatch();
             return 4;

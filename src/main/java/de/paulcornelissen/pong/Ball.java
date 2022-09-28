@@ -5,31 +5,26 @@ import basis.Hilfe;
 
 import java.util.Random;
 
-import static de.paulcornelissen.pong.Pong.*;
-
 public class Ball extends Bild {
 
     private double xCord;
     private double yCord;
-    boolean goal = false;
-
-    int speed = 40;
-    PongPencilManager pongPencilManager;
-
-    Double direction;
-    Double angle;
+    public boolean rightCollision;
+    public int direction;
+    public float angle;
+    int speed = 35;
+    private Pong pong;
 
 
-    public Ball(int x, int y, PongPencilManager pm) {
+    public Ball(int x, int y, Pong pong) {
         xCord = x - 10;
         yCord = y - 10;
-        pongPencilManager = pm;
+        this.pong = pong;
 
         this.setzePosition(xCord, yCord);
         this.setzeGroesse(30, 30);
 
-
-        pongPencilManager.setObject(this).zeichneBall();
+        pong.getPongPencilManager().setObject(this).zeichneBall();
     }
 
     public double getX() {
@@ -41,22 +36,20 @@ public class Ball extends Bild {
     }
 
     public void movementListener() {
-        //Direction 1 = rechts
-        //Direction -1 = links
-        //angle 1 = 45 Grad Winkel
-        //angle 0 = 0 Grad Winkel
-        direction = (double) getStartDirection();
-        angle = (double) 0;
+        direction = getStartDirection();
+        angle = (float) 0;
         move();
-
     }
 
     public void changeDirection() {
         direction = direction * (-1);
-        if(this.getChance()) {angle = getAngle();}
-        if (speed < 30) {return;}
-        speed = (int) (speed * 0.9);
-
+        if (this.getChance()) {
+            angle = (float) getAngle();
+        }
+        if (speed < 8) {
+            return;
+        }
+        speed = (int) (speed * 0.8);
     }
 
     public void bounce() {
@@ -65,8 +58,7 @@ public class Ball extends Bild {
 
 
     public void move() {
-
-        while (game.gameActive) {
+        while (pong.getGameStatus()) {
             moveTo(getX() + 2.5 * direction - (1.25 * angle), getY() + (angle * 1.25));
             Hilfe.warte(speed);
         }
@@ -78,7 +70,7 @@ public class Ball extends Bild {
         this.setzePosition(x, y);
         xCord = x;
         yCord = y;
-        CollisionListener.checkCollision();
+        pong.getCollisionListener().checkCollision();
 
     }
 
@@ -89,8 +81,13 @@ public class Ball extends Bild {
         boolean directionBoolean = random.nextBoolean();
 
         if (directionBoolean) {
+            rightCollision = false;
             return 1;
-        } else return -1;
+        } else {
+            rightCollision = true;
+            return -1;
+        }
+
     }
 
     public double getAngle() {
@@ -107,5 +104,8 @@ public class Ball extends Bild {
         return random.nextBoolean();
     }
 
+    public void clear() {
+        this.setzeSichtbar(false);
+    }
 
 }
