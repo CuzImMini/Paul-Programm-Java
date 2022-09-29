@@ -35,7 +35,7 @@ public class MainGui extends JFrame {
             hampelmannThread.start();
         });
         startVierGewinnt.addActionListener(e -> {
-            Thread vierGThrad = new Thread(() -> System.out.println("Vier Gewinnt"));
+            Thread vierGThrad = new Thread(() -> System.out.println("Vier Gewinnt ist noch in Entwicklung"));
             vierGThrad.start();
         });
         startPaulPaint.addActionListener(e -> {

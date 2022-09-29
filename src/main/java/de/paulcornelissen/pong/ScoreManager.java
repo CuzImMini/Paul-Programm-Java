@@ -17,7 +17,6 @@ public class ScoreManager extends Bild {
 
     public void refresh(int left, int right) {
         this.reset();
-        System.out.println("Refresh");
         pongPencilManager.setObject(this).zeichneSpielstand(left, right);
     }
 

@@ -70,15 +70,12 @@ public class GameManager {
     }
 
     public void checkWin() {
-        System.out.println("PRÜFUNG | Links: " + scoreLeft + " Rechts: " + scoreRight);
         if (scoreRight == 2) {
-            System.out.println("Rechts hat gewonnen!");
             pong.win("rechten Spieler");
             gameListener.interrupt();
             return;
         }
         if (scoreLeft == 2) {
-            System.out.println("Links hat gewonnen!");
             pong.win("linken Spieler");
             gameListener.interrupt();
         }

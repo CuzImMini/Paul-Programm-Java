@@ -20,22 +20,16 @@ public class CollisionListener {
 
     public int checkCollision() {
         if (ball.getX() >= 580 && (ball.getY() - bouncePadRight.getY()) < 150 && (ball.getY() - bouncePadRight.getY()) > 0 && !ball.rightCollision) {
-            System.out.println("Collision-R");
-
             ball.rightCollision = true;
             ball.changeDirection();
             return 1;
         }
         if (ball.getX() <= 120 && (ball.getY() - bouncePadLeft.getY()) < 150 && (ball.getY() - bouncePadLeft.getY()) > 0 && ball.rightCollision) {
-            System.out.println("Collision-L");
-
             ball.rightCollision = false;
             ball.changeDirection();
             return 2;
         }
         if (ball.getX() > 675) {
-            System.out.println("Goal-at-R");
-
             game.goalL();
             pong.getScoreManager().refresh(gameManager.scoreLeft, gameManager.scoreRight);
 
@@ -43,8 +37,6 @@ public class CollisionListener {
             return 3;
         }
         if (ball.getX() < 0) {
-            System.out.println("Goal-at-L");
-
             game.goalR();
             pong.getScoreManager().refresh(gameManager.scoreLeft, gameManager.scoreRight);
 
@@ -52,8 +44,6 @@ public class CollisionListener {
             return 4;
         }
         if (ball.getY() > 475 || ball.getY() < 0) {
-            System.out.println("Collision-Wall");
-
             ball.bounce();
             return 5;
         }
