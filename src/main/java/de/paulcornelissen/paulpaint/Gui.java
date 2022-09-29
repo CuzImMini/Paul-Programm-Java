@@ -10,7 +10,7 @@ public class Gui extends JFrame {
 
     public PaintInstanceManager paintInstanceManager;
     JComboBox<String> colorSelector;
-    String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Weiß"};
+    String[] color = {"Eigene", "Blau", "Cyan", "Grau", "Dunkelgrau", "Gelb", "Grün", "Hellgrau", "Magenta", "Orange", "Pink", "Rot", "Schwarz", "Radierer"};
     private JComboBox<String> objectSelector;
     private JComboBox<String> widthSelector;
     private JToggleButton drawingToggle;
