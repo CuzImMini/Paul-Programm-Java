@@ -19,7 +19,7 @@ public class CollisionListener {
     }
 
     public int checkCollision() {
-        if (ball.getX() >= 580 && (ball.getY() - bouncePadRight.getY()) < 150 && (ball.getY() - bouncePadRight.getY()) > 0 && !ball.rightCollision || (pong.getCheatMode() && ball.getX() >= 580)) {
+        if (ball.getX() >= 580 && (ball.getY() - bouncePadRight.getY()) < 150 && (ball.getY() - bouncePadRight.getY()) > 0 && !ball.rightCollision || (pong.getSinglePlayer() && ball.getX() >= 580)) {
             ball.rightCollision = true;
             ball.changeDirection();
             return 1;

@@ -28,7 +28,7 @@ public class GameManager {
     public void resetMatch() {
         ball.moveTo(350, 250);
         bouncePadLeft.moveTo(bouncePadLeft.getX(), 175);
-        if (!pong.getCheatMode()) {bouncePadRight.moveTo(bouncePadRight.getX(), 175);}
+        if (!pong.getSinglePlayer()) {bouncePadRight.moveTo(bouncePadRight.getX(), 175);}
 
         pong.setGameStatus(false);
     }
@@ -47,8 +47,8 @@ public class GameManager {
         ball.moveTo(350, 250);
         bouncePadLeft.moveTo(bouncePadLeft.getX(), 175);
 
-        bouncePadRight.cheatOff();
-        pong.setCheatMode(false);
+        bouncePadRight.singlePlayerOff();
+        pong.setSinglePlayer(false);
 
         pong.setGameStatus(false);
     }

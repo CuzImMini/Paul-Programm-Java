@@ -19,7 +19,7 @@ public class Pong {
     public ScoreManager scoreManager;
     boolean gameActive = false;
 
-    boolean cheatRight = false;
+    boolean singlePlayer = false;
 
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
@@ -73,18 +73,18 @@ public class Pong {
         return (komponente, c) -> {
             switch (c) {
                 case '+':
-                    if(cheatRight) {
+                    if(singlePlayer) {
                         break;
                     }
-                    cheatRight = true;
-                    bouncePadRight.cheat();
+                    singlePlayer = true;
+                    bouncePadRight.singlePlayer();
                     break;
                 case 'k':
-                    if (cheatRight) {return;}
+                    if (singlePlayer) {return;}
                     bouncePadRight.down();
                     break;
                 case 'i':
-                    if (cheatRight) {return;}
+                    if (singlePlayer) {return;}
                     bouncePadRight.up();
                     break;
                 case 'd':
@@ -153,11 +153,11 @@ public class Pong {
         scoreManager = new ScoreManager(this);
     }
 
-    public boolean getCheatMode() {
-        return cheatRight;
+    public boolean getSinglePlayer() {
+        return singlePlayer;
     }
-    public void setCheatMode(boolean mode) {
-        cheatRight = mode;
+    public void setSinglePlayer(boolean mode) {
+        singlePlayer = mode;
     }
 
 }

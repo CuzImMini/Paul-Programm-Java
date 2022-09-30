@@ -50,15 +50,15 @@ public class BouncePad extends Bild {
         this.setzeSichtbar(false);
     }
 
-    public void cheat() {
+    public void singlePlayer() {
         this.setzeGroesse(25, 500);
         yCord = 0;
         this.setzePosition(getX(), getY());
-        pongPencilManager.setObject(this).zeichneCheatPad();
+        pongPencilManager.setObject(this).zeichneSinglePlayerPad();
 
     }
 
-    public void cheatOff() {
+    public void singlePlayerOff() {
         this.loescheAlles();
         this.setzeGroesse(25, 150);
         pongPencilManager.setObject(this).zeichneBouncepad();
