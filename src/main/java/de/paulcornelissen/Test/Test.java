@@ -11,6 +11,9 @@ public class Test {
     private IgelStift pencil;
     private JFrame gui;
 
+    public static void main(String[] args) {
+        new Test();
+    }
     public Test() {
         window = new Fenster(700, 300);
         pencil = new IgelStift();
@@ -25,7 +28,7 @@ public class Test {
         JButton start = new JButton("Start");
         start.addActionListener(e -> {
             pencil.bewegeBis(200,200);
-            pencil.zeichneRechteck(getCountFromDialog("Welche breite?"),getCountFromDialog("Welche höhe?"));
+            pencil.zeichneRechteck(getInputDialog("Welche breite?"),getInputDialog("Welche höhe?"));
         });
         gui.getContentPane().add(start);
 
@@ -33,7 +36,7 @@ public class Test {
         gui.setVisible(true);
     }
 
-    public int getCountFromDialog(String question) {
+    public int getInputDialog(String question) {
         return Integer.parseInt(JOptionPane.showInputDialog(null, question, "Auswahl", JOptionPane.QUESTION_MESSAGE));
     }
 

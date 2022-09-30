@@ -150,6 +150,7 @@ public class Pong {
     }
 
     public void resetScoreboard() {
+        if(!window.istSichtbar()) {return;}
         scoreManager = new ScoreManager(this);
     }
 
