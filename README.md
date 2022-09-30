@@ -1,3 +1,3 @@
 # Informatik
 
-Programmierung mit einer vorgeferitgten Basisbibliothek.
+Programmierung mit einer vorgefertigten Basisbibliothek.
