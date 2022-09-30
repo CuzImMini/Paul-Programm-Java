@@ -15,8 +15,6 @@ public class BouncePad extends Bild {
         this.setzePosition(xCord, yCord);
         this.setzeGroesse(25, 150);
 
-        this.setzeVereinfachteKollisionerkennung(true);
-
         pongPencilManager.setObject(this).zeichneBouncepad();
     }
 
@@ -50,6 +48,23 @@ public class BouncePad extends Bild {
 
     public void clear() {
         this.setzeSichtbar(false);
+    }
+
+    public void cheat() {
+        this.setzeGroesse(25, 500);
+        yCord = 0;
+        this.setzePosition(getX(), getY());
+        pongPencilManager.setObject(this).zeichneCheatPad();
+
+    }
+
+    public void cheatOff() {
+        this.loescheAlles();
+        this.setzeGroesse(25, 150);
+        pongPencilManager.setObject(this).zeichneBouncepad();
+        yCord = 175;
+        this.setzePosition(xCord, yCord);
+
     }
 
 }

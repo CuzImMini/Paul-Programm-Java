@@ -4,7 +4,7 @@ public class GameManager {
 
 
     private final BouncePad bouncePadLeft;
-    private final BouncePad bouncePadRight;
+    private BouncePad bouncePadRight;
     private final Pong pong;
     int scoreRight = 0;
     int scoreLeft = 0;
@@ -28,7 +28,7 @@ public class GameManager {
     public void resetMatch() {
         ball.moveTo(350, 250);
         bouncePadLeft.moveTo(bouncePadLeft.getX(), 175);
-        bouncePadRight.moveTo(bouncePadRight.getX(), 175);
+        if (!pong.getCheatMode()) {bouncePadRight.moveTo(bouncePadRight.getX(), 175);}
 
         pong.setGameStatus(false);
     }
@@ -46,7 +46,9 @@ public class GameManager {
 
         ball.moveTo(350, 250);
         bouncePadLeft.moveTo(bouncePadLeft.getX(), 175);
-        bouncePadRight.moveTo(bouncePadRight.getX(), 175);
+
+        bouncePadRight.cheatOff();
+        pong.setCheatMode(false);
 
         pong.setGameStatus(false);
     }
@@ -70,12 +72,12 @@ public class GameManager {
     }
 
     public void checkWin() {
-        if (scoreRight == 2) {
+        if (scoreRight == 3) {
             pong.win("rechten Spieler");
             gameListener.interrupt();
             return;
         }
-        if (scoreLeft == 2) {
+        if (scoreLeft == 3) {
             pong.win("linken Spieler");
             gameListener.interrupt();
         }

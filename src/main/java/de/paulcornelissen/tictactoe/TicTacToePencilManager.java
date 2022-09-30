@@ -16,6 +16,16 @@ public class TicTacToePencilManager extends Stift {
         return this;
     }
 
+    public TicTacToePencilManager setColor(Color color) {
+        this.setzeFarbe(color);
+        return this;
+    }
+
+    public TicTacToePencilManager setWidth(int width) {
+        this.setzeLinienBreite(width);
+        return this;
+    }
+
     public void zeichneRaster() {
         this.setzeLinienBreite(3);
 
@@ -70,6 +80,15 @@ public class TicTacToePencilManager extends Stift {
         this.runter();
         this.zeichneKreis(80);
         this.hoch();
+    }
+
+    public TicTacToePencilManager setRadierer() {
+        this.radiere();
+        return this;
+    }
+    public TicTacToePencilManager setNormal() {
+        this.normal();
+        return this;
     }
 
     public void zeichneWinHorizont(Feld object1, Feld object2) {

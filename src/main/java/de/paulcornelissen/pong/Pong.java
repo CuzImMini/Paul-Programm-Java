@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class Pong {
 
-    public final BouncePad bouncePadRight;
+    public BouncePad bouncePadRight;
     public final BouncePad bouncePadLeft;
     public final GameManager game;
     private final Fenster window;
@@ -18,6 +18,8 @@ public class Pong {
     private final CollisionListener collisionListener;
     public ScoreManager scoreManager;
     boolean gameActive = false;
+
+    boolean cheatRight = false;
 
     public Pong() {
         window = new Fenster("Paul-Pong", 700, 500);
@@ -61,7 +63,7 @@ public class Pong {
         pongPencilManager.setPosition(278, 285, 0);
         pongPencilManager.setzeSchriftGroesse(15);
 
-        pongPencilManager.schreibeText("Drücke Q zum Reset!");
+        pongPencilManager.schreibeText("Drücke R zum Reset!");
 
 
     }
@@ -69,32 +71,43 @@ public class Pong {
 
     public TastenLauscher getKeyboardListener() {
         return (komponente, c) -> {
-            if (c == 'k') {
-                bouncePadRight.down();
-            }
-            if (c == 'i') {
-                bouncePadRight.up();
-            }
-            if (c == 'd') {
-                bouncePadLeft.down();
-            }
-            if (c == 'e') {
-                bouncePadLeft.up();
-            }
-            if (c == 'g') {
-                if (gameActive) {
-                    game.continueMatch();
-                    return;
-                }
-                game.startMatch();
-            }
-            if (c == 'q') {
-                game.restartMatch();
+            switch (c) {
+                case '+':
+                    if(cheatRight) {
+                        break;
+                    }
+                    cheatRight = true;
+                    bouncePadRight.cheat();
+                    break;
+                case 'k':
+                    if (cheatRight) {return;}
+                    bouncePadRight.down();
+                    break;
+                case 'i':
+                    if (cheatRight) {return;}
+                    bouncePadRight.up();
+                    break;
+                case 'd':
+                    bouncePadLeft.down();
+                    break;
+                case 'e':
+                    bouncePadLeft.up();
+                    break;
+                case 'g':
+                    if (gameActive) {
+                        game.continueMatch();
+                        break;
+                    }
+                    game.startMatch();
+                    break;
+                case 'r':
+                    game.restartMatch();
+                    break;
+
             }
 
 
-        };
-    }
+        };}
 
     public PongPencilManager getPongPencilManager() {
         return pongPencilManager;
@@ -140,5 +153,11 @@ public class Pong {
         scoreManager = new ScoreManager(this);
     }
 
+    public boolean getCheatMode() {
+        return cheatRight;
+    }
+    public void setCheatMode(boolean mode) {
+        cheatRight = mode;
+    }
 
 }

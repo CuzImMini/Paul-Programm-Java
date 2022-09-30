@@ -23,6 +23,10 @@ public class PongPencilManager extends Stift {
         this.setzeLinienBreite(5);
         this.zeichneRechteck(25,150);
     }
+    public void zeichneCheatPad() {
+        this.setzeLinienBreite(5);
+        this.zeichneRechteck(25,500);
+    }
 
     public void zeichneBall() {
         this.setzeLinienBreite(12);
