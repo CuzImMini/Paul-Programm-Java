@@ -12,6 +12,7 @@ public class Test {
     public static void main(String[] args) {
         new Test();
     }
+
     public Test() {
         new Fenster(700, 300);
         pencil = new IgelStift();
@@ -32,9 +33,37 @@ public class Test {
             int breite = Integer.parseInt(getInputDialog("Welche breite?"));
             int hoehe = Integer.parseInt(getInputDialog("Welche höhe?"));
 
+            /*
+            JPanel panel = new JPanel();
+            JTextField text = new JTextField(5);
+            JLabel text11 = new JLabel("Wie oft platzieren?");
+            panel.add(text11);
+            panel.add(text);
+            JLabel text22 = new JLabel("Abstand?");
+            JTextField text2 = new JTextField(5);
+            panel.add(text22);
+            panel.add(text2);
+            JTextField text3 = new JTextField(5);
+            JLabel text33 = new JLabel("Größe?");
+            panel.add(text33);
+            panel.add(text3);
+
+
+
+            int x = JOptionPane.showConfirmDialog(null, panel, "Test", JOptionPane.OK_CANCEL_OPTION);
+
+            if (x == JOptionPane.OK_OPTION) {
+                for (int i = 0; i < Integer.parseInt(text.getText()); i++) {
+                    pencil.bewegeBis(100 + (i*Integer.parseInt(text2.getText())), 100);
+                    pencil.zeichneRechteck(Integer.parseInt(text3.getText()),Integer.parseInt(text3.getText()));
+
+                }
+            }
+            */
+
             for (int i = 0; i < anzahl; i++) {
-                pencil.bewegeBis(100 + (i*abstand), 100);
-                pencil.zeichneRechteck(breite,hoehe);
+                pencil.bewegeBis(100 + (i * abstand), 100);
+                pencil.zeichneRechteck(breite, hoehe);
 
             }
         });
