@@ -2,82 +2,100 @@ package de.paulcornelissen.Test;
 
 import basis.Fenster;
 import basis.IgelStift;
+import basis.Knopf;
+import basis.Stift;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Test {
-
-    private final IgelStift pencil;
-
     public static void main(String[] args) {
         new Test();
     }
 
+    //Variablen zur Steuerung des Programms können beliebig gewählt werden:
+
+    //Fenstertitel
+    String title = "Steuerung";
+    //Nachricht in externem GUI
+    String message = "Wähle eine Aktion!";
+    //Text auf primärem Aktionsknopf
+    String primaryButtonText = "Primäraktion";
+    //Text auf sekundärem Aktionsknopf
+    String secondaryButtonText = "Sekundäraktion";
+
+    //klassen-weit genutzte Variablen
+
+    //Stift zum vereinfachten Aufruf der Zeichenmethoden
+    Stift pencil;
+
     public Test() {
-        new Fenster(700, 300);
-        pencil = new IgelStift();
 
+        //Initialisierung Fenster
+        new Fenster(620, 620);
+        pencil = new Stift();
 
-        this.addGui();
-    }
+        //Erstellen der Steuerungs-UI
+        JFrame controler = getControlFrame(title, message, primaryButtonText, secondaryButtonText);
+        controler.setVisible(true);
 
-    public void addGui() {
-        JFrame gui = new JFrame();
-        gui.setSize(200, 100);
+        //Manuelle Knöpfe in Zeichenfläche
+        Knopf manualButtonPrimary = new Knopf(primaryButtonText, 200, 500, 100, 50);
+        manualButtonPrimary.setzeKnopfLauscher(knopf -> primaryAction());
 
-        JButton start = new JButton("Start");
-        start.addActionListener(e -> {
-            int anzahl = Integer.parseInt(getInputDialog("Wie oft platzieren?"));
-            int abstand = Integer.parseInt(getInputDialog("Welcher Abstand?"));
-
-            int breite = Integer.parseInt(getInputDialog("Welche breite?"));
-            int hoehe = Integer.parseInt(getInputDialog("Welche höhe?"));
-
-            /*
-            JPanel panel = new JPanel();
-            JTextField text = new JTextField(5);
-            JLabel text11 = new JLabel("Wie oft platzieren?");
-            panel.add(text11);
-            panel.add(text);
-            JLabel text22 = new JLabel("Abstand?");
-            JTextField text2 = new JTextField(5);
-            panel.add(text22);
-            panel.add(text2);
-            JTextField text3 = new JTextField(5);
-            JLabel text33 = new JLabel("Größe?");
-            panel.add(text33);
-            panel.add(text3);
-
-
-
-            int x = JOptionPane.showConfirmDialog(null, panel, "Test", JOptionPane.OK_CANCEL_OPTION);
-
-            if (x == JOptionPane.OK_OPTION) {
-                for (int i = 0; i < Integer.parseInt(text.getText()); i++) {
-                    pencil.bewegeBis(100 + (i*Integer.parseInt(text2.getText())), 100);
-                    pencil.zeichneRechteck(Integer.parseInt(text3.getText()),Integer.parseInt(text3.getText()));
-
-                }
-            }
-            */
-
-            for (int i = 0; i < anzahl; i++) {
-                pencil.bewegeBis(100 + (i * abstand), 100);
-                pencil.zeichneRechteck(breite, hoehe);
-
-            }
-        });
-        gui.getContentPane().add(start);
-
-        gui.setLocationRelativeTo(null);
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gui.setVisible(true);
-
+        Knopf manualButtonSecondary = new Knopf(secondaryButtonText, 400, 500, 100, 50);
+        manualButtonSecondary.setzeKnopfLauscher(knopf -> secondaryAction());
 
     }
 
-    public String getInputDialog(String question) {
-        return JOptionPane.showInputDialog(null, question, "Auswahl", JOptionPane.QUESTION_MESSAGE);
+    public JFrame getControlFrame(String title, String message, String primaryButtonText, String secondaryButtonText) {
+        //Erstellen der externen GUI
+        JFrame jFrame = new JFrame();
+        //Setzen des Titels
+        jFrame.setTitle(title);
+        //Setzen der Nachricht
+        JLabel messageLabel = new JLabel(message);
+        jFrame.add(messageLabel);
+
+        //Knöpfe setzen
+        JButton primaryButton = new JButton(primaryButtonText);
+        primaryButton.addActionListener(e -> primaryAction());
+        jFrame.add(primaryButton);
+
+        JButton secondaryButton = new JButton(secondaryButtonText);
+        secondaryButton.addActionListener(e -> secondaryAction());
+        jFrame.add(secondaryButton);
+
+        //sonstige Einstellungen
+        jFrame.setSize(400, 80);
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setLayout(new FlowLayout());
+        //Rückgabe
+        return jFrame;
     }
+
+    public void primaryAction() {
+        //Ausführen der Primäraktion je nach Aufgabe
+        pencil.kreis(getInputDigit("x-Cord"), getInputDigit("y-Cord"), getInputDigit("radius"));
+    }
+
+    public void secondaryAction() {
+        //Ausführen der Sekundäraktion je nach Aufgabe
+        pencil.rechteck(getInputDigit("x-Cord"), getInputDigit("y-Cord"), 150, 150);
+    }
+
+    public Integer getInputDigit(String message) {
+        //Prüfen, ob eine Zahl eingegeben wurde mit try-catch
+        try {
+            return Integer.parseInt(JOptionPane.showInputDialog(message));
+        } catch (NumberFormatException e) {
+            //Wenn String Fehler ausgibt, Dialog erneut aufrufen
+            JOptionPane.showMessageDialog(null, "Gib eine Zahl ein!");
+            return getInputDigit(message);
+        }
+    }
+
 
 }
