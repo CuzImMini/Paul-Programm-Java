@@ -1,100 +1,136 @@
 package de.paulcornelissen.Test;
 
+import basis.BeschriftungsFeld;
 import basis.Fenster;
-import basis.IgelStift;
+import basis.Hilfe;
 import basis.Knopf;
-import basis.Stift;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Test {
+
+    //Variablen
+    private final BeschriftungsFeld welcomeMessage;
+    private final BeschriftungsFeld diceNumber;
+    private final BeschriftungsFeld lastNumber;
+    private final BeschriftungsFeld scoreIndicator;
+    int lastRoll;
+    int activeRoll;
+    int rollNumber = 0;
+    int[] rolls = new int[100];
+    int scoreOne = 0;
+    int scoreTwo = 0;
+    int whichPlayer = 1;
+    StringBuilder stringBuilder;
+
+    //Konstruktor
+    public Test() {
+
+        //Sonstige Komponenten
+        stringBuilder = new StringBuilder();
+
+        //Initialisierung Fenster
+        new Fenster("Würfelspiel", 600, 600);
+
+        //Initialisierung Komponenten
+        welcomeMessage = new BeschriftungsFeld("Pauls-Würfelspiel. Spieler " + whichPlayer + ", beginne zu würfeln!", 100, 80, 400, 25);
+
+        new BeschriftungsFeld("Gewürfelte Zahl:", 100, 200, 100, 25);
+        diceNumber = new BeschriftungsFeld("0", 250, 200, 25, 25);
+
+        new BeschriftungsFeld("Letzte Zahl:", 100, 300, 100, 25);
+        lastNumber = new BeschriftungsFeld("keine Würfe!", 250, 300, 250, 25);
+
+        scoreIndicator = new BeschriftungsFeld("Spieler 1: 0 Punkte / Spieler 2: 0 Punkte", 100, 120, 400, 25);
+
+        //Init Knöpfe
+        Knopf rollDiceButton = new Knopf("Würfeln!", 100, 400, 200, 50);
+        Knopf resetKnopf = new Knopf("Neues Spiel", 400, 400, 100, 50);
+
+        rollDiceButton.setzeKnopfLauscher(knopf -> rollDice());
+        resetKnopf.setzeKnopfLauscher(knopf -> fullReset());
+
+    }
+
+    //Main zum Starten der Klasse
     public static void main(String[] args) {
+        System.out.println("Programm gestartet!");
         new Test();
     }
 
-    //Variablen zur Steuerung des Programms können beliebig gewählt werden:
+    //Generator für Zufallszahl
+    public static Integer generateRollNumber() {
+        return Hilfe.zufall(1, 6);
+    }
 
-    //Fenstertitel
-    String title = "Steuerung";
-    //Nachricht in externem GUI
-    String message = "Wähle eine Aktion!";
-    //Text auf primärem Aktionsknopf
-    String primaryButtonText = "Primäraktion";
-    //Text auf sekundärem Aktionsknopf
-    String secondaryButtonText = "Sekundäraktion";
-
-    //klassen-weit genutzte Variablen
-
-    //Stift zum vereinfachten Aufruf der Zeichenmethoden
-    Stift pencil;
-
-    public Test() {
-
-        //Initialisierung Fenster
-        new Fenster(620, 620);
-        pencil = new Stift();
-
-        //Erstellen der Steuerungs-UI
-        JFrame controler = getControlFrame(title, message, primaryButtonText, secondaryButtonText);
-        controler.setVisible(true);
-
-        //Manuelle Knöpfe in Zeichenfläche
-        Knopf manualButtonPrimary = new Knopf(primaryButtonText, 200, 500, 100, 50);
-        manualButtonPrimary.setzeKnopfLauscher(knopf -> primaryAction());
-
-        Knopf manualButtonSecondary = new Knopf(secondaryButtonText, 400, 500, 100, 50);
-        manualButtonSecondary.setzeKnopfLauscher(knopf -> secondaryAction());
+    //Methode, die Ansicht aktualisiert
+    public void refresh() {
+        diceNumber.setzeText(String.valueOf(activeRoll));
+        scoreIndicator.setzeText("Spieler 1:  " + scoreOne + "  Punkte / Spieler 2:  " + scoreTwo + "  Punkte");
+        welcomeMessage.setzeText("Pauls-Würfelspiel. Spieler " + whichPlayer + ", beginne zu würfeln!");
 
     }
 
-    public JFrame getControlFrame(String title, String message, String primaryButtonText, String secondaryButtonText) {
-        //Erstellen der externen GUI
-        JFrame jFrame = new JFrame();
-        //Setzen des Titels
-        jFrame.setTitle(title);
-        //Setzen der Nachricht
-        JLabel messageLabel = new JLabel(message);
-        jFrame.add(messageLabel);
+    //Methode zum Würfeln
+    public void rollDice() {
+        //Zuweisung zufällige Nummer
+        activeRoll = generateRollNumber();
 
-        //Knöpfe setzen
-        JButton primaryButton = new JButton(primaryButtonText);
-        primaryButton.addActionListener(e -> primaryAction());
-        jFrame.add(primaryButton);
-
-        JButton secondaryButton = new JButton(secondaryButtonText);
-        secondaryButton.addActionListener(e -> secondaryAction());
-        jFrame.add(secondaryButton);
-
-        //sonstige Einstellungen
-        jFrame.setSize(400, 80);
-        jFrame.setLocationRelativeTo(null);
-        jFrame.setLayout(new FlowLayout());
-        //Rückgabe
-        return jFrame;
-    }
-
-    public void primaryAction() {
-        //Ausführen der Primäraktion je nach Aufgabe
-        pencil.kreis(getInputDigit("x-Cord"), getInputDigit("y-Cord"), getInputDigit("radius"));
-    }
-
-    public void secondaryAction() {
-        //Ausführen der Sekundäraktion je nach Aufgabe
-        pencil.rechteck(getInputDigit("x-Cord"), getInputDigit("y-Cord"), 150, 150);
-    }
-
-    public Integer getInputDigit(String message) {
-        //Prüfen, ob eine Zahl eingegeben wurde mit try-catch
-        try {
-            return Integer.parseInt(JOptionPane.showInputDialog(message));
-        } catch (NumberFormatException e) {
-            //Wenn String Fehler ausgibt, Dialog erneut aufrufen
-            JOptionPane.showMessageDialog(null, "Gib eine Zahl ein!");
-            return getInputDigit(message);
+        //Setzen des letzten Wurfes Feld
+        if (rollNumber != 0) {
+            stringBuilder.append(" ").append(rolls[rollNumber]).append(" - ");
         }
+        lastNumber.setzeText(stringBuilder.toString());
+
+        //Erhöhen der Variable für Wurfanzahl
+        rollNumber += 1;
+        //Prüfe Verlust
+        checkLoose();
+        //Aktualisieren des GUI
+        refresh();
+        rolls[rollNumber] = activeRoll;
+
+    }
+
+    public void checkLoose() {
+
+        for (int i = 1; i < rollNumber + 1; i++) {
+            if (activeRoll == rolls[i]) {
+                switch (whichPlayer) {
+                    case 1 -> whichPlayer = 2;
+                    case 2 -> whichPlayer = 1;
+                }
+                JOptionPane.showMessageDialog(null, "Dein Zug ist zu ende!");
+                lastRoll = 0;
+                activeRoll = 0;
+                refresh();
+                clearArray();
+                return;
+            }
+        }
+
+        //Änderung des Punktestandes
+        switch (whichPlayer) {
+            case 1 -> scoreOne += 1;
+            case 2 -> scoreTwo += 1;
+        }
+    }
+
+    public void fullReset() {
+        scoreIndicator.setzeText("Spieler 1: 0 Punkte / Spieler 2: 0 Punkte");
+        lastRoll = 0;
+        activeRoll = 0;
+        clearArray();
+        lastNumber.setzeText(stringBuilder.toString());
+        scoreOne = 0;
+        scoreTwo = 0;
+    }
+
+    public void clearArray() {
+
+        rolls = new int[99];
+        rollNumber = 0;
+        stringBuilder = new StringBuilder();
     }
 
 
