@@ -1,4 +1,4 @@
-package de.paulcornelissen.Test;
+package de.paulcornelissen.Wuerfelspiel;
 
 import basis.BeschriftungsFeld;
 import basis.Fenster;
@@ -7,7 +7,7 @@ import basis.Knopf;
 
 import javax.swing.*;
 
-public class Test {
+public class WuerfelspielTest {
 
     //Variablen
     private final BeschriftungsFeld welcomeMessage;
@@ -20,20 +20,19 @@ public class Test {
     int[] rolls = new int[100];
     int scoreOne = 0;
     int scoreTwo = 0;
-    int whichPlayer = 1;
-    StringBuilder stringBuilder;
+    AktiverSpielerEnum activePlayer = AktiverSpielerEnum.EINS;
+    StringBuilder lastNumberLabelBuilder;
 
     //Konstruktor
-    public Test() {
+    public WuerfelspielTest() {
 
         //Sonstige Komponenten
-        stringBuilder = new StringBuilder();
-
+        lastNumberLabelBuilder = new StringBuilder();
         //Initialisierung Fenster
         new Fenster("Würfelspiel", 600, 600);
 
         //Initialisierung Komponenten
-        welcomeMessage = new BeschriftungsFeld("Pauls-Würfelspiel. Spieler " + whichPlayer + ", beginne zu würfeln!", 100, 80, 400, 25);
+        welcomeMessage = new BeschriftungsFeld("Pauls-Würfelspiel. Spieler " + activePlayer.getText() + ", beginne zu würfeln!", 100, 80, 400, 25);
 
         new BeschriftungsFeld("Gewürfelte Zahl:", 100, 200, 100, 25);
         diceNumber = new BeschriftungsFeld("0", 250, 200, 25, 25);
@@ -55,7 +54,7 @@ public class Test {
     //Main zum Starten der Klasse
     public static void main(String[] args) {
         System.out.println("Programm gestartet!");
-        new Test();
+        new WuerfelspielTest();
     }
 
     //Generator für Zufallszahl
@@ -67,7 +66,7 @@ public class Test {
     public void refresh() {
         diceNumber.setzeText(String.valueOf(activeRoll));
         scoreIndicator.setzeText("Spieler 1:  " + scoreOne + "  Punkte / Spieler 2:  " + scoreTwo + "  Punkte");
-        welcomeMessage.setzeText("Pauls-Würfelspiel. Spieler " + whichPlayer + ", beginne zu würfeln!");
+        welcomeMessage.setzeText("Pauls-Würfelspiel. Spieler " + activePlayer.getText() + ", beginne zu würfeln!");
 
     }
 
@@ -78,9 +77,9 @@ public class Test {
 
         //Setzen des letzten Wurfes Feld
         if (rollNumber != 0) {
-            stringBuilder.append(" ").append(rolls[rollNumber]).append(" - ");
+            lastNumberLabelBuilder.append(" ").append(rolls[rollNumber]).append(" - ");
         }
-        lastNumber.setzeText(stringBuilder.toString());
+        lastNumber.setzeText(lastNumberLabelBuilder.toString());
 
         //Erhöhen der Variable für Wurfanzahl
         rollNumber += 1;
@@ -93,14 +92,13 @@ public class Test {
     }
 
     public void checkLoose() {
-
-        for (int i = 1; i < rollNumber + 1; i++) {
-            if (activeRoll == rolls[i]) {
-                switch (whichPlayer) {
-                    case 1 -> whichPlayer = 2;
-                    case 2 -> whichPlayer = 1;
-                }
+        for (int roll : rolls) {
+            if (activeRoll == roll) {
+                //Wechseln Spieler
+                activePlayer = activePlayer.getOther();
+                //Ausgabe Popup
                 JOptionPane.showMessageDialog(null, "Dein Zug ist zu ende!");
+                //Ändern der Variablen
                 lastRoll = 0;
                 activeRoll = 0;
                 refresh();
@@ -110,9 +108,9 @@ public class Test {
         }
 
         //Änderung des Punktestandes
-        switch (whichPlayer) {
-            case 1 -> scoreOne += 1;
-            case 2 -> scoreTwo += 1;
+        switch (activePlayer) {
+            case EINS -> scoreOne += 1;
+            case ZWEI -> scoreTwo += 1;
         }
     }
 
@@ -121,7 +119,7 @@ public class Test {
         lastRoll = 0;
         activeRoll = 0;
         clearArray();
-        lastNumber.setzeText(stringBuilder.toString());
+        lastNumber.setzeText(lastNumberLabelBuilder.toString());
         scoreOne = 0;
         scoreTwo = 0;
     }
@@ -130,7 +128,7 @@ public class Test {
 
         rolls = new int[99];
         rollNumber = 0;
-        stringBuilder = new StringBuilder();
+        lastNumberLabelBuilder = new StringBuilder();
     }
 
 
