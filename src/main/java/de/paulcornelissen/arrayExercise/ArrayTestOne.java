@@ -9,7 +9,7 @@ public class ArrayTestOne {
         new ArrayTestOne();
     }
 
-    String[] animals = new String[100];
+    String[] animals = new String[8];
     public ArrayTestOne() {
         this.addAnimalsToArray();
         System.out.println(Arrays.toString(animals));
