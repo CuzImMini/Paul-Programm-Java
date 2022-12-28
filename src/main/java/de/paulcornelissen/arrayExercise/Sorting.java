@@ -1,6 +1,8 @@
 package de.paulcornelissen.arrayExercise;
 
 import basis.Fenster;
+import basis.Knopf;
+import basis.Komponente;
 import basis.Stift;
 
 import java.util.Random;
@@ -11,9 +13,15 @@ public class Sorting {
         new Sorting();
     }
 
-    int[] numbers = new int[200];
-int calculations;
+    //Einstellungen
+    SortAlgorithm sortAlgorithm = SortAlgorithm.SIMPLE_SORT;
+    int arraySize = 200;
     int speed = 50;
+
+    //Ende - Einstellungen
+
+    int[] numbers = new int[arraySize];
+    int calculations;
     private Fenster window;
     private Stift pencil;
 
@@ -21,9 +29,11 @@ int calculations;
         initialize();
 
         //verschiedene Sortiermodi:
-        //bubbleSort(numbers);
-        //selectionSort(numbers);
-        //simpleSort(numbers);
+        switch (sortAlgorithm) {
+            case BUBBLE_SORT -> bubbleSort(numbers);
+            case SELECTION_SORT -> selectionSort(numbers);
+            case SIMPLE_SORT -> simpleSort(numbers);
+        }
 
     }
 
@@ -38,6 +48,7 @@ int calculations;
         this.drawArray(numbers);
     }
 
+    //BubbleSort - sortiert das Array von links nach rechts
     public void bubbleSort(int[] array) {
         int compare;
 
@@ -61,9 +72,9 @@ int calculations;
 
     }
 
-
+    //SelectionSort - sortiert das Array von links nach rechts und tauscht zwei verglichene Elemente, sodass das größere Elemente gleichzeitig nach rechts wandern
     public void selectionSort(int[] array) {
-        //Arraylänge
+        //Array länge
         int n = array.length;
 
         // Schleife für alle Elemente
@@ -73,7 +84,7 @@ int calculations;
             int activeElementIndex = i;
 
             for (int j = i + 1; j < n; j++) {
-                // Setzt das temporärere Element auf das kleinste Element im ganzen Array, da jedes Element verglichen wird
+                // Setzt das temporäre Element auf das kleinste Element im ganzen Array, da jedes Element verglichen wird
                 if (array[j] < array[activeElementIndex]) {
                     //Sollte Element kleiner sein, wird temporäreres Element gewechselt
                     calculations++;
@@ -93,6 +104,7 @@ int calculations;
         }
     }
 
+    //SimpleSort - sortiert das Array in zwei Schleifen von rechts und von links
     public void simpleSort(int[] array) {
        int compareNumber;
 
@@ -114,6 +126,7 @@ int calculations;
     }
 
 
+    //Methode zur Visualisierung des Arrays
     public void drawArray(int[] numbers) {
         window.loescheAlles();
         for (int i = 0; i < numbers.length; i++) {
